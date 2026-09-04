@@ -20,9 +20,9 @@ proc cnn_fwd_path {p} {
 }
 
 # ---------------------------------------------------------------------------
-# Synthesis top
+# Synthesis top (minimal pinout for xc7z010; full CNN sits underneath)
 # ---------------------------------------------------------------------------
-set cnn_synth_top "cnn_accelerator_shared_compute_top"
+set cnn_synth_top "cnn_accelerator_synth_wrapper"
 set cnn_fpga_part "xc7z010clg400-1"
 
 # ---------------------------------------------------------------------------
@@ -61,6 +61,7 @@ set cnn_rtl_sources [list \
     [cnn_repo_path rtl signed_argmax5_controller.sv] \
     [cnn_repo_path rtl cnn_top_controller.sv] \
     [cnn_repo_path rtl cnn_accelerator_shared_compute_top.sv] \
+    [cnn_repo_path rtl cnn_accelerator_synth_wrapper.sv] \
 ]
 
 # ---------------------------------------------------------------------------

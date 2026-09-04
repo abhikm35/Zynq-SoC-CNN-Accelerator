@@ -1,6 +1,7 @@
 # Vivado / Arty Z7-10 constraints for the standalone CNN accelerator top.
 #
-# Synthesis top: cnn_accelerator_shared_compute_top
+# Synthesis top: cnn_accelerator_synth_wrapper
+#   (wraps cnn_accelerator_shared_compute_top with a tiny pinout)
 # Part:          xc7z010clg400-1
 #
 # IMPORTANT — clock source is not yet finalized for Zynq PS integration:
@@ -12,6 +13,10 @@
 # port so standalone synthesis/implementation can produce timing reports.
 # When the accelerator is connected to a PS FCLK (or another PL clock),
 # revise or replace this constraint to match the actual clock source and period.
+#
+# Pins are intentionally unconstrained (no PACKAGE_PIN). Vivado will
+# auto-assign IOs for resource/timing characterization only. Add real
+# board pin LOC constraints only when integrating to the Arty Z7 / PS design.
 
 ## -----------------------------------------------------------------------------
 ## Provisional PL clock (standalone characterization only)
@@ -26,7 +31,3 @@ create_clock -period 10.000 -name cnn_clk -waveform {0.000 5.000} [get_ports clk
 ##   2. Replace or retarget create_clock above.
 ##   3. Add false paths / CDC constraints for PS↔PL if needed.
 ##   4. Constrain AXI and host ports once they exist.
-##
-## Host / debug ports (start, busy, done, predicted_class, …) are currently
-## unconstrained beyond the clock. That is intentional until the I/O wrapper
-## and board pinout are defined.

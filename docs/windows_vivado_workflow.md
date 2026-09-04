@@ -40,10 +40,15 @@ Do not maintain a second manually edited RTL copy inside a Vivado project folder
 ## Current synthesis top
 
 ```text
-cnn_accelerator_shared_compute_top
+cnn_accelerator_synth_wrapper
 ```
 
-Architecture (verified in RTL sim):
+This is a **tiny pinout wrapper** around the verified
+`cnn_accelerator_shared_compute_top`. The full top exposes hundreds of
+TB/debug ports and cannot place on xc7z010 (~230 user IOs). The wrapper
+keeps `clk/rst/start/busy/done/predicted_class/maximum_logit` only.
+
+Architecture underneath (verified in RTL sim):
 
 ```text
 2 ping-pong activation RAMs

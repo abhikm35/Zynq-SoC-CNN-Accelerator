@@ -5,11 +5,12 @@ Zynq edge-AI INT8 CNN accelerator for a 5-class traffic-sign classifier.
 ## Synthesis top (current)
 
 ```text
-rtl/cnn_accelerator_shared_compute_top.sv
+rtl/cnn_accelerator_synth_wrapper.sv
 ```
 
-Contains: ping-pong activation RAMs, shared Conv engine, shared MaxPool engine,
-GAP, FC, Argmax.
+Thin FPGA pinout around `cnn_accelerator_shared_compute_top`
+(ping-pong RAMs, shared Conv, shared MaxPool, GAP, FC, Argmax).
+The full top is for simulation; the wrapper is for Vivado place/route.
 
 ## Development split
 
