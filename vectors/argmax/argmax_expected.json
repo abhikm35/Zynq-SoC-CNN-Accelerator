@@ -1,0 +1,80 @@
+{
+  "operation": "signed_argmax5",
+  "num_logits": 5,
+  "logit_datatype": "int32",
+  "logit_width": 32,
+  "logit_signed": true,
+  "predicted_class_width": 3,
+  "tie_breaking": "lowest_index_strict_greater",
+  "python_reference": "numpy.argmax / IntegerTinyCNN.predict",
+  "softmax": false,
+  "requantize": false,
+  "relu": false,
+  "class_names": [
+    "stop",
+    "yield",
+    "no_entry",
+    "speed_limit_30",
+    "keep_right"
+  ],
+  "real_case": {
+    "name": "real_fc_sample_000",
+    "logits": [
+      25,
+      -24,
+      -18,
+      -21,
+      -57
+    ],
+    "expected_maximum_logit": 25,
+    "expected_predicted_class": 0,
+    "expected_class_name": "stop",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 25,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 25,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -24,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 25,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": -18,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 25,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": -21,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 25,
+        "predicted_class": 0
+      },
+      {
+        "index": 4,
+        "logit": -57,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 25,
+        "predicted_class": 0
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  "directed_count": 16,
+  "random_count": 512,
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy",
+  "note": "Logits are FC post-requant INT32 scores."
+}

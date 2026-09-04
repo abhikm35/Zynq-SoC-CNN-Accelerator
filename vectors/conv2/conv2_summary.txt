@@ -1,0 +1,14 @@
+Conv2 expected tensor (signed INT8 after requant + ReLU)
+shape: [32, 16, 16]  entries: 8192
+macs_per_output=144  total_macs=1179648
+min=0 max=72 zeros=4392 sats=0 checksum=40022
+address: oc*256 + row*16 + col
+
+Selected outputs:
+  ch0_r0_c0: (0,0,0) addr=0 value=13
+  ch0_r7_c7: (0,7,7) addr=119 value=0
+  ch1_r0_c0: (1,0,0) addr=256 value=0
+  ch5_r7_c10: (5,7,10) addr=1402 value=19
+  ch9_r12_c4: (9,12,4) addr=2500 value=31
+  ch15_r15_c15: (15,15,15) addr=4095 value=0
+  ch31_r15_c15: (31,15,15) addr=8191 value=2

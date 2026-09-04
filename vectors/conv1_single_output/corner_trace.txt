@@ -1,0 +1,335 @@
+Initial bias: -1673
+out_channel=0 out_row=0 out_col=0
+multiplier=1231684457 shift=39 output_zp=0
+
+MAC 0
+input_channel = 0
+kernel_row = 0
+kernel_column = 0
+input_row = -1
+input_column = -1
+padding = true
+input = 0
+weight = 127
+product = 0
+accumulator = -1673
+
+MAC 1
+input_channel = 0
+kernel_row = 0
+kernel_column = 1
+input_row = -1
+input_column = 0
+padding = true
+input = 0
+weight = 27
+product = 0
+accumulator = -1673
+
+MAC 2
+input_channel = 0
+kernel_row = 0
+kernel_column = 2
+input_row = -1
+input_column = 1
+padding = true
+input = 0
+weight = 8
+product = 0
+accumulator = -1673
+
+MAC 3
+input_channel = 0
+kernel_row = 1
+kernel_column = 0
+input_row = 0
+input_column = -1
+padding = true
+input = 0
+weight = 25
+product = 0
+accumulator = -1673
+
+MAC 4
+input_channel = 0
+kernel_row = 1
+kernel_column = 1
+input_row = 0
+input_column = 0
+padding = false
+input = 56
+weight = -98
+product = -5488
+accumulator = -7161
+
+MAC 5
+input_channel = 0
+kernel_row = 1
+kernel_column = 2
+input_row = 0
+input_column = 1
+padding = false
+input = 105
+weight = -120
+product = -12600
+accumulator = -19761
+
+MAC 6
+input_channel = 0
+kernel_row = 2
+kernel_column = 0
+input_row = 1
+input_column = -1
+padding = true
+input = 0
+weight = 96
+product = 0
+accumulator = -19761
+
+MAC 7
+input_channel = 0
+kernel_row = 2
+kernel_column = 1
+input_row = 1
+input_column = 0
+padding = false
+input = 99
+weight = -52
+product = -5148
+accumulator = -24909
+
+MAC 8
+input_channel = 0
+kernel_row = 2
+kernel_column = 2
+input_row = 1
+input_column = 1
+padding = false
+input = 109
+weight = -92
+product = -10028
+accumulator = -34937
+
+MAC 9
+input_channel = 1
+kernel_row = 0
+kernel_column = 0
+input_row = -1
+input_column = -1
+padding = true
+input = 0
+weight = -13
+product = 0
+accumulator = -34937
+
+MAC 10
+input_channel = 1
+kernel_row = 0
+kernel_column = 1
+input_row = -1
+input_column = 0
+padding = true
+input = 0
+weight = -37
+product = 0
+accumulator = -34937
+
+MAC 11
+input_channel = 1
+kernel_row = 0
+kernel_column = 2
+input_row = -1
+input_column = 1
+padding = true
+input = 0
+weight = -8
+product = 0
+accumulator = -34937
+
+MAC 12
+input_channel = 1
+kernel_row = 1
+kernel_column = 0
+input_row = 0
+input_column = -1
+padding = true
+input = 0
+weight = 1
+product = 0
+accumulator = -34937
+
+MAC 13
+input_channel = 1
+kernel_row = 1
+kernel_column = 1
+input_row = 0
+input_column = 0
+padding = false
+input = 35
+weight = -32
+product = -1120
+accumulator = -36057
+
+MAC 14
+input_channel = 1
+kernel_row = 1
+kernel_column = 2
+input_row = 0
+input_column = 1
+padding = false
+input = 101
+weight = -13
+product = -1313
+accumulator = -37370
+
+MAC 15
+input_channel = 1
+kernel_row = 2
+kernel_column = 0
+input_row = 1
+input_column = -1
+padding = true
+input = 0
+weight = -28
+product = 0
+accumulator = -37370
+
+MAC 16
+input_channel = 1
+kernel_row = 2
+kernel_column = 1
+input_row = 1
+input_column = 0
+padding = false
+input = 96
+weight = -56
+product = -5376
+accumulator = -42746
+
+MAC 17
+input_channel = 1
+kernel_row = 2
+kernel_column = 2
+input_row = 1
+input_column = 1
+padding = false
+input = 119
+weight = 75
+product = 8925
+accumulator = -33821
+
+MAC 18
+input_channel = 2
+kernel_row = 0
+kernel_column = 0
+input_row = -1
+input_column = -1
+padding = true
+input = 0
+weight = -29
+product = 0
+accumulator = -33821
+
+MAC 19
+input_channel = 2
+kernel_row = 0
+kernel_column = 1
+input_row = -1
+input_column = 0
+padding = true
+input = 0
+weight = 6
+product = 0
+accumulator = -33821
+
+MAC 20
+input_channel = 2
+kernel_row = 0
+kernel_column = 2
+input_row = -1
+input_column = 1
+padding = true
+input = 0
+weight = -27
+product = 0
+accumulator = -33821
+
+MAC 21
+input_channel = 2
+kernel_row = 1
+kernel_column = 0
+input_row = 0
+input_column = -1
+padding = true
+input = 0
+weight = 9
+product = 0
+accumulator = -33821
+
+MAC 22
+input_channel = 2
+kernel_row = 1
+kernel_column = 1
+input_row = 0
+input_column = 0
+padding = false
+input = 10
+weight = 56
+product = 560
+accumulator = -33261
+
+MAC 23
+input_channel = 2
+kernel_row = 1
+kernel_column = 2
+input_row = 0
+input_column = 1
+padding = false
+input = 46
+weight = 36
+product = 1656
+accumulator = -31605
+
+MAC 24
+input_channel = 2
+kernel_row = 2
+kernel_column = 0
+input_row = 1
+input_column = -1
+padding = true
+input = 0
+weight = -65
+product = 0
+accumulator = -31605
+
+MAC 25
+input_channel = 2
+kernel_row = 2
+kernel_column = 1
+input_row = 1
+input_column = 0
+padding = false
+input = 56
+weight = 36
+product = 2016
+accumulator = -29589
+
+MAC 26
+input_channel = 2
+kernel_row = 2
+kernel_column = 2
+input_row = 1
+input_column = 1
+padding = false
+input = 75
+weight = 71
+product = 5325
+accumulator = -24264
+
+Final INT32 accumulator: -24264
+wide_product (acc*mult): -29885591664648
+rounding_offset: 274877906944
+after rounding/shift: -54
+before saturation: -54
+after saturation (conv1): -54
+after ReLU (relu1): 0

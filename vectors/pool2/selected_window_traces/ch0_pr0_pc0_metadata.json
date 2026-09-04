@@ -1,0 +1,39 @@
+{
+  "name": "ch0_pr0_pc0",
+  "channel": 0,
+  "pool_row": 0,
+  "pool_column": 0,
+  "window": [
+    {
+      "window_index": 0,
+      "input_row": 0,
+      "input_column": 0,
+      "conv2_address": 0,
+      "value": 13
+    },
+    {
+      "window_index": 1,
+      "input_row": 0,
+      "input_column": 1,
+      "conv2_address": 1,
+      "value": 9
+    },
+    {
+      "window_index": 2,
+      "input_row": 1,
+      "input_column": 0,
+      "conv2_address": 16,
+      "value": 0
+    },
+    {
+      "window_index": 3,
+      "input_row": 1,
+      "input_column": 1,
+      "conv2_address": 17,
+      "value": 0
+    }
+  ],
+  "maximum": 13,
+  "pool2_address": 0,
+  "pool2_value": 13
+}

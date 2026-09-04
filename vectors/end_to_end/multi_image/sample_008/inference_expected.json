@@ -1,0 +1,164 @@
+{
+  "sample_id": "sample_008",
+  "true_class": 2,
+  "predicted_class": 2,
+  "predicted_class_name": "no_entry",
+  "maximum_logit": 53,
+  "logits": [
+    -15,
+    -50,
+    53,
+    -56,
+    -74
+  ],
+  "gap": [
+    62,
+    7,
+    62,
+    62,
+    13,
+    39,
+    49,
+    29,
+    33,
+    79,
+    72,
+    26,
+    23,
+    26,
+    59,
+    69,
+    36,
+    33,
+    95,
+    43,
+    33,
+    13,
+    69,
+    39,
+    39,
+    36,
+    13,
+    16,
+    69,
+    29,
+    72,
+    29
+  ],
+  "tie_breaking": "lowest_index_strict_greater",
+  "logit_datatype": "int32",
+  "logit_width": 32,
+  "tensor_stats": {
+    "input": {
+      "shape": [
+        3072
+      ],
+      "size": 3072,
+      "dtype": "int8",
+      "checksum": -55583,
+      "min": -67,
+      "max": 127,
+      "zero_count": 7
+    },
+    "conv1_relu": {
+      "shape": [
+        16384
+      ],
+      "size": 16384,
+      "dtype": "int8",
+      "checksum": 164884,
+      "min": 0,
+      "max": 111,
+      "zero_count": 6514
+    },
+    "pool1": {
+      "shape": [
+        4096
+      ],
+      "size": 4096,
+      "dtype": "int8",
+      "checksum": 57681,
+      "min": 0,
+      "max": 111,
+      "zero_count": 1044
+    },
+    "conv2_relu": {
+      "shape": [
+        8192
+      ],
+      "size": 8192,
+      "dtype": "int8",
+      "checksum": 58224,
+      "min": 0,
+      "max": 117,
+      "zero_count": 4771
+    },
+    "pool2": {
+      "shape": [
+        2048
+      ],
+      "size": 2048,
+      "dtype": "int8",
+      "checksum": 26674,
+      "min": 0,
+      "max": 117,
+      "zero_count": 663
+    },
+    "gap": {
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "int8",
+      "checksum": 1374,
+      "min": 7,
+      "max": 95,
+      "zero_count": 0
+    },
+    "logits": {
+      "shape": [
+        5
+      ],
+      "size": 5,
+      "dtype": "int32",
+      "checksum": -142,
+      "min": -74,
+      "max": 53,
+      "zero_count": 0
+    }
+  },
+  "shapes": {
+    "input": [
+      3,
+      32,
+      32
+    ],
+    "conv1": [
+      16,
+      32,
+      32
+    ],
+    "pool1": [
+      16,
+      16,
+      16
+    ],
+    "conv2": [
+      32,
+      16,
+      16
+    ],
+    "pool2": [
+      32,
+      8,
+      8
+    ],
+    "gap": [
+      32
+    ],
+    "logits": [
+      5
+    ]
+  },
+  "note": "Trained channel counts are 16/32 (not the obsolete 8/16 prompt sketches). Conv1/Conv2 expected tensors are post-ReLU."
+}

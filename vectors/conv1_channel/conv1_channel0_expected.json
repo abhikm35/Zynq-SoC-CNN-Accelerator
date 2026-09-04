@@ -1,0 +1,24 @@
+{
+  "output_channel": 0,
+  "shape": [
+    1,
+    32,
+    32
+  ],
+  "flattening": "row_major_within_channel",
+  "address_equation": "output_row * 32 + output_column",
+  "future_full_conv1_address": "output_channel * 1024 + output_row * 32 + output_column",
+  "note": "Trained Conv1 has 16 output channels; this export is channel 0 only.",
+  "output_count": 1024,
+  "dtype": "int8",
+  "min": 0,
+  "max": 19,
+  "num_zeros": 858,
+  "num_saturated_pos127": 0,
+  "num_saturated_neg128": 0,
+  "num_saturated": 0,
+  "checksum_sum_int64": 744,
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy",
+  "macs_per_output": 27,
+  "input_channels_combined": 3
+}

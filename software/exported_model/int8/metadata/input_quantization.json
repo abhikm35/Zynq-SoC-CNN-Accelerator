@@ -1,0 +1,7 @@
+{
+  "input_scale": 0.018515485478198434,
+  "input_zero_point": 0,
+  "input_dtype": "int8",
+  "input_minimum": -128,
+  "input_maximum": 127
+}

@@ -1,0 +1,56 @@
+{
+  "name": "mixed_pos_neg",
+  "logits": [
+    -50,
+    10,
+    -3,
+    8,
+    -100
+  ],
+  "expected_maximum_logit": 10,
+  "expected_predicted_class": 1,
+  "expected_class_name": "yield",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": -50,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": -50,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": 10,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": 10,
+      "predicted_class": 1
+    },
+    {
+      "index": 2,
+      "logit": -3,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 10,
+      "predicted_class": 1
+    },
+    {
+      "index": 3,
+      "logit": 8,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 10,
+      "predicted_class": 1
+    },
+    {
+      "index": 4,
+      "logit": -100,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 10,
+      "predicted_class": 1
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

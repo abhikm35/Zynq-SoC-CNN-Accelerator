@@ -1,0 +1,72 @@
+quantization:
+  scheme: integer_affine
+  calibration_samples: 500
+  calibration_seed: 42
+  # Normalized network inputs can be negative, so all activations use
+  # symmetric signed int8 with zero-point 0 for a consistent FPGA datapath.
+  activation_signedness: signed
+  input_dtype: int8
+  activation_dtype: int8
+
+weights:
+  dtype: int8
+  symmetric: true
+  per_channel: true
+  narrow_range: true
+  zero_point: 0
+  min_value: -127
+  max_value: 127
+
+activations:
+  dtype: int8
+  symmetric: true
+  per_tensor: true
+  zero_point: 0
+  calibration_method: min_max
+  min_value: -128
+  max_value: 127
+
+accumulators:
+  dtype: int32
+  min_value: -2147483648
+  max_value: 2147483647
+
+rounding:
+  mode: round_to_nearest_away_from_zero
+
+saturation:
+  enabled: true
+
+requantization:
+  multiplier_bits: 31
+  use_int64_temp: true
+
+layers:
+  conv1:
+    quantize_output: true
+    output_name: conv1
+  relu1:
+    output_dtype: int8
+  pool1:
+    preserve_scale: true
+  conv2:
+    quantize_output: true
+    output_name: conv2
+  relu2:
+    output_dtype: int8
+  pool2:
+    preserve_scale: true
+  global_average_pool:
+    accumulator_dtype: int32
+    # Integer average stays in pool2 scale, then requantizes to calibrated GAP/flatten scale.
+    preserve_scale: false
+    requantize_to_flatten_scale: true
+  classifier:
+    weight_dtype: int8
+    per_channel: true
+    shared_output_scale: true
+    output_dtype: int32
+
+export:
+  directory: software/exported_model/int8
+  fpga_directory: software/exported_model/int8/fpga

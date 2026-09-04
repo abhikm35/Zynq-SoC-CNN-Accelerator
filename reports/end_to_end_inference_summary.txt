@@ -1,0 +1,26 @@
+End-to-end CNN inference performance summary
+==========================================
+
+Simulation clock frequency: 100 MHz (assumed)
+Clock period: 10 ns
+Total inference cycles: 3564054
+Inference latency: 35640540 ns (35640.540 us / 35.641 ms)
+Theoretical sequential inferences per second: 28.058
+
+Stage cycle breakdown:
+  Conv1         1032195  (28.961%)
+  MaxPool1        61443  ( 1.724%)
+  Conv2         2433027  (68.266%)
+  MaxPool2        30723  ( 0.862%)
+  GAP              6275  ( 0.176%)
+  FC                368  ( 0.010%)
+  Argmax             23  ( 0.001%)
+  Overhead            0  ( 0.000%)
+
+Notes:
+- Trained sizes: 16/32 channels (not obsolete 8/16 prompt sketches).
+- Measured on sample_000 (predicted class 0, max logit 25).
+- Cycle count clears on accepted start, increments while busy, stops at DONE.
+- Dominant cost is Conv2 (~68%), then Conv1 (~29%).
+- No ping-pong / AXI / DMA in this phase.
+

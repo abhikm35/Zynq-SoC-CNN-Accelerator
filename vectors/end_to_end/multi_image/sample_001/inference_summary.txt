@@ -1,0 +1,10 @@
+sample: sample_001
+true_class: 0 (stop)
+predicted_class: 1 (yield)
+maximum_logit: -6
+logits: [-8, -6, -12, -6, -61]
+gap checksum: 979
+conv1 checksum: 78224
+pool1 checksum: 30906
+conv2 checksum: 38860
+pool2 checksum: 19116

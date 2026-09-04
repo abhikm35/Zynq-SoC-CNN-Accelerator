@@ -1,0 +1,56 @@
+{
+  "name": "exactly_one_positive",
+  "logits": [
+    -5,
+    -9,
+    -2,
+    1,
+    -40
+  ],
+  "expected_maximum_logit": 1,
+  "expected_predicted_class": 3,
+  "expected_class_name": "speed_limit_30",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": -5,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": -5,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": -9,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -5,
+      "predicted_class": 0
+    },
+    {
+      "index": 2,
+      "logit": -2,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": -2,
+      "predicted_class": 2
+    },
+    {
+      "index": 3,
+      "logit": 1,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": 1,
+      "predicted_class": 3
+    },
+    {
+      "index": 4,
+      "logit": -40,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 1,
+      "predicted_class": 3
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

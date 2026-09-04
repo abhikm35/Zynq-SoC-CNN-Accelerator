@@ -1,0 +1,33 @@
+Complete Conv1 output tensor (post-ReLU INT8)
+shape: [16, 32, 32]  entries: 16384
+address: oc*1024 + row*32 + col  (channel-first)
+min=0 max=87 zeros=11229 saturated=0
+checksum_sum=69013
+macs_per_output=27  total_macs=442368
+
+Per-channel checksums:
+  ch00: sum=744 min=0 max=19 zeros=858
+  ch01: sum=3257 min=0 max=27 zeros=740
+  ch02: sum=421 min=0 max=14 zeros=931
+  ch03: sum=6505 min=0 max=65 zeros=525
+  ch04: sum=5227 min=0 max=55 zeros=601
+  ch05: sum=7710 min=0 max=55 zeros=496
+  ch06: sum=2122 min=0 max=30 zeros=752
+  ch07: sum=1680 min=0 max=40 zeros=841
+  ch08: sum=147 min=0 max=8 zeros=965
+  ch09: sum=6473 min=0 max=67 zeros=588
+  ch10: sum=8748 min=0 max=87 zeros=604
+  ch11: sum=965 min=0 max=9 zeros=840
+  ch12: sum=6484 min=0 max=49 zeros=641
+  ch13: sum=3945 min=0 max=61 zeros=584
+  ch14: sum=3262 min=0 max=27 zeros=746
+  ch15: sum=11323 min=0 max=65 zeros=517
+
+Selected outputs:
+  ch0_r0_c0: (0,0,0) addr=0 value=0
+  ch0_r10_c10: (0,10,10) addr=330 value=0
+  ch1_r0_c0: (1,0,0) addr=1024 value=0
+  ch3_r15_c15: (3,15,15) addr=3567 value=4
+  ch5_r12_c17: (5,12,17) addr=5521 value=0
+  ch7_r31_c31: (7,31,31) addr=8191 value=0
+  ch15_r31_c31: (15,31,31) addr=16383 value=0

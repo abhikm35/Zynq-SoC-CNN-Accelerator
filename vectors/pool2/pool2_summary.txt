@@ -1,0 +1,13 @@
+MaxPool2 expected tensor (signed INT8 max, no requant/ReLU)
+shape: [32, 8, 8]  entries: 2048
+address: ch*64 + prow*8 + pcol
+min=0 max=72 zeros=469 checksum=20661
+reads_per_output=4  total_reads=8192
+
+Selected windows:
+  ch0_pr0_pc0: (0,0,0) addr=0 value=13
+  ch0_pr7_pc7: (0,7,7) addr=63 value=2
+  ch3_pr4_pc5: (3,4,5) addr=229 value=9
+  ch8_pr2_pc6: (8,2,6) addr=534 value=0
+  ch15_pr7_pc7: (15,7,7) addr=1023 value=1
+  ch31_pr7_pc7: (31,7,7) addr=2047 value=3

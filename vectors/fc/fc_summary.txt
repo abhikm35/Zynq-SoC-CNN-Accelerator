@@ -1,0 +1,13 @@
+FC vector export summary
+GAP inputs: 32
+Classes: 5
+Weights: 160
+Total MACs: 160
+argmax=0
+
+class  bias    acc    logit
+    0   -319   14026      25
+    1    245  -12650     -24
+    2   -661  -10523     -18
+    3    629  -12252     -21
+    4   -383  -31911     -57

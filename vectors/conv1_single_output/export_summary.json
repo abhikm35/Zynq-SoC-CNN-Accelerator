@@ -1,0 +1,39 @@
+{
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy",
+  "int8_root": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8",
+  "architecture_note": "Conv1 is 3->16 (trained model), not 3->8",
+  "macs_per_output": 27,
+  "cases": {
+    "center": {
+      "out_channel": 0,
+      "out_row": 10,
+      "out_col": 10,
+      "final_accumulator": 88,
+      "requantized": 0,
+      "relu": 0
+    },
+    "corner": {
+      "out_channel": 0,
+      "out_row": 0,
+      "out_col": 0,
+      "final_accumulator": -24264,
+      "requantized": -54,
+      "relu": 0
+    },
+    "channel3": {
+      "out_channel": 3,
+      "out_row": 16,
+      "out_col": 8,
+      "final_accumulator": -15758,
+      "requantized": -33,
+      "relu": 0
+    }
+  },
+  "quantization": {
+    "symmetric": true,
+    "zero_points": 0,
+    "weight_scales": "per_output_channel",
+    "activation_scales": "per_tensor",
+    "requantization": "round(acc * multiplier / 2^shift) ties away from zero"
+  }
+}

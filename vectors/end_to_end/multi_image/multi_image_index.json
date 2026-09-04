@@ -1,0 +1,116 @@
+{
+  "images": [
+    {
+      "sample_id": "sample_000",
+      "predicted_class": 0,
+      "maximum_logit": 25,
+      "logits": [
+        25,
+        -24,
+        -18,
+        -21,
+        -57
+      ],
+      "checksums": {
+        "input": 67149,
+        "conv1_relu": 69013,
+        "pool1": 30347,
+        "conv2_relu": 40022,
+        "pool2": 20661,
+        "gap": 1061,
+        "logits": -95
+      }
+    },
+    {
+      "sample_id": "sample_001",
+      "predicted_class": 1,
+      "maximum_logit": -6,
+      "logits": [
+        -8,
+        -6,
+        -12,
+        -6,
+        -61
+      ],
+      "checksums": {
+        "input": 101592,
+        "conv1_relu": 78224,
+        "pool1": 30906,
+        "conv2_relu": 38860,
+        "pool2": 19116,
+        "gap": 979,
+        "logits": -93
+      }
+    },
+    {
+      "sample_id": "sample_008",
+      "predicted_class": 2,
+      "maximum_logit": 53,
+      "logits": [
+        -15,
+        -50,
+        53,
+        -56,
+        -74
+      ],
+      "checksums": {
+        "input": -55583,
+        "conv1_relu": 164884,
+        "pool1": 57681,
+        "conv2_relu": 58224,
+        "pool2": 26674,
+        "gap": 1374,
+        "logits": -142
+      }
+    },
+    {
+      "sample_id": "sample_002",
+      "predicted_class": 3,
+      "maximum_logit": -5,
+      "logits": [
+        -6,
+        -7,
+        -9,
+        -5,
+        -48
+      ],
+      "checksums": {
+        "input": 62903,
+        "conv1_relu": 67388,
+        "pool1": 25446,
+        "conv2_relu": 32123,
+        "pool2": 15260,
+        "gap": 775,
+        "logits": -75
+      }
+    },
+    {
+      "sample_id": "sample_005",
+      "predicted_class": 4,
+      "maximum_logit": -1,
+      "logits": [
+        -26,
+        -2,
+        -13,
+        -8,
+        -1
+      ],
+      "checksums": {
+        "input": 31299,
+        "conv1_relu": 18149,
+        "pool1": 6830,
+        "conv2_relu": 26190,
+        "pool2": 9880,
+        "gap": 512,
+        "logits": -50
+      }
+    }
+  ],
+  "class_names": [
+    "stop",
+    "yield",
+    "no_entry",
+    "speed_limit_30",
+    "keep_right"
+  ]
+}

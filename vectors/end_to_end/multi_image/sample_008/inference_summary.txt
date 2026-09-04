@@ -1,0 +1,10 @@
+sample: sample_008
+true_class: 2 (no_entry)
+predicted_class: 2 (no_entry)
+maximum_logit: 53
+logits: [-15, -50, 53, -56, -74]
+gap checksum: 1374
+conv1 checksum: 164884
+pool1 checksum: 57681
+conv2 checksum: 58224
+pool2 checksum: 26674

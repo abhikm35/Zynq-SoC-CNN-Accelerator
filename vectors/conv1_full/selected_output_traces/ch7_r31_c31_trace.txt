@@ -1,0 +1,470 @@
+output_channel = 7
+output_row = 31
+output_column = 31
+bias_address = 7
+bias_value = -2246
+multiplier = 1638005525
+shift = 40
+
+MAC 0
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 0
+kernel_column = 0
+calculated_input_row = 30
+calculated_input_column = 30
+padding = false
+activation_address = 990
+activation_value = 51
+weight_address = 189
+weight_value = -99
+product = -5049
+running_accumulator = -7295
+
+MAC 1
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 0
+kernel_column = 1
+calculated_input_row = 30
+calculated_input_column = 31
+padding = false
+activation_address = 991
+activation_value = 57
+weight_address = 190
+weight_value = -64
+product = -3648
+running_accumulator = -10943
+
+MAC 2
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 0
+kernel_column = 2
+calculated_input_row = 30
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 191
+weight_value = -31
+product = 0
+running_accumulator = -10943
+
+MAC 3
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 1
+kernel_column = 0
+calculated_input_row = 31
+calculated_input_column = 30
+padding = false
+activation_address = 1022
+activation_value = 56
+weight_address = 192
+weight_value = 62
+product = 3472
+running_accumulator = -7471
+
+MAC 4
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 1
+kernel_column = 1
+calculated_input_row = 31
+calculated_input_column = 31
+padding = false
+activation_address = 1023
+activation_value = 56
+weight_address = 193
+weight_value = -68
+product = -3808
+running_accumulator = -11279
+
+MAC 5
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 1
+kernel_column = 2
+calculated_input_row = 31
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 194
+weight_value = -127
+product = 0
+running_accumulator = -11279
+
+MAC 6
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 2
+kernel_column = 0
+calculated_input_row = 32
+calculated_input_column = 30
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 195
+weight_value = 53
+product = 0
+running_accumulator = -11279
+
+MAC 7
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 2
+kernel_column = 1
+calculated_input_row = 32
+calculated_input_column = 31
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 196
+weight_value = -63
+product = 0
+running_accumulator = -11279
+
+MAC 8
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 0
+kernel_row = 2
+kernel_column = 2
+calculated_input_row = 32
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 197
+weight_value = -124
+product = 0
+running_accumulator = -11279
+
+MAC 9
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 0
+kernel_column = 0
+calculated_input_row = 30
+calculated_input_column = 30
+padding = false
+activation_address = 2014
+activation_value = 42
+weight_address = 198
+weight_value = 56
+product = 2352
+running_accumulator = -8927
+
+MAC 10
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 0
+kernel_column = 1
+calculated_input_row = 30
+calculated_input_column = 31
+padding = false
+activation_address = 2015
+activation_value = 57
+weight_address = 199
+weight_value = -27
+product = -1539
+running_accumulator = -10466
+
+MAC 11
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 0
+kernel_column = 2
+calculated_input_row = 30
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 200
+weight_value = 61
+product = 0
+running_accumulator = -10466
+
+MAC 12
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 1
+kernel_column = 0
+calculated_input_row = 31
+calculated_input_column = 30
+padding = false
+activation_address = 2046
+activation_value = 59
+weight_address = 201
+weight_value = 124
+product = 7316
+running_accumulator = -3150
+
+MAC 13
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 1
+kernel_column = 1
+calculated_input_row = 31
+calculated_input_column = 31
+padding = false
+activation_address = 2047
+activation_value = 47
+weight_address = 202
+weight_value = 46
+product = 2162
+running_accumulator = -988
+
+MAC 14
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 1
+kernel_column = 2
+calculated_input_row = 31
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 203
+weight_value = 17
+product = 0
+running_accumulator = -988
+
+MAC 15
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 2
+kernel_column = 0
+calculated_input_row = 32
+calculated_input_column = 30
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 204
+weight_value = 65
+product = 0
+running_accumulator = -988
+
+MAC 16
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 2
+kernel_column = 1
+calculated_input_row = 32
+calculated_input_column = 31
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 205
+weight_value = 37
+product = 0
+running_accumulator = -988
+
+MAC 17
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 1
+kernel_row = 2
+kernel_column = 2
+calculated_input_row = 32
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 206
+weight_value = -13
+product = 0
+running_accumulator = -988
+
+MAC 18
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 0
+kernel_column = 0
+calculated_input_row = 30
+calculated_input_column = 30
+padding = false
+activation_address = 3038
+activation_value = 16
+weight_address = 207
+weight_value = -22
+product = -352
+running_accumulator = -1340
+
+MAC 19
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 0
+kernel_column = 1
+calculated_input_row = 30
+calculated_input_column = 31
+padding = false
+activation_address = 3039
+activation_value = 29
+weight_address = 208
+weight_value = 6
+product = 174
+running_accumulator = -1166
+
+MAC 20
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 0
+kernel_column = 2
+calculated_input_row = 30
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 209
+weight_value = 25
+product = 0
+running_accumulator = -1166
+
+MAC 21
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 1
+kernel_column = 0
+calculated_input_row = 31
+calculated_input_column = 30
+padding = false
+activation_address = 3070
+activation_value = 36
+weight_address = 210
+weight_value = -30
+product = -1080
+running_accumulator = -2246
+
+MAC 22
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 1
+kernel_column = 1
+calculated_input_row = 31
+calculated_input_column = 31
+padding = false
+activation_address = 3071
+activation_value = 17
+weight_address = 211
+weight_value = -38
+product = -646
+running_accumulator = -2892
+
+MAC 23
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 1
+kernel_column = 2
+calculated_input_row = 31
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 212
+weight_value = -62
+product = 0
+running_accumulator = -2892
+
+MAC 24
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 2
+kernel_column = 0
+calculated_input_row = 32
+calculated_input_column = 30
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 213
+weight_value = -31
+product = 0
+running_accumulator = -2892
+
+MAC 25
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 2
+kernel_column = 1
+calculated_input_row = 32
+calculated_input_column = 31
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 214
+weight_value = 53
+product = 0
+running_accumulator = -2892
+
+MAC 26
+output_channel = 7
+output_row = 31
+output_column = 31
+input_channel = 2
+kernel_row = 2
+kernel_column = 2
+calculated_input_row = 32
+calculated_input_column = 32
+padding = true
+activation_address = invalid
+activation_value = 0
+weight_address = 215
+weight_value = 76
+product = 0
+running_accumulator = -2892
+
+final_accumulator = -2892
+requantized = -4
+relu = 0

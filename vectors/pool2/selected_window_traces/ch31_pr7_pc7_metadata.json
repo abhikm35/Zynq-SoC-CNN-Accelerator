@@ -1,0 +1,39 @@
+{
+  "name": "ch31_pr7_pc7",
+  "channel": 31,
+  "pool_row": 7,
+  "pool_column": 7,
+  "window": [
+    {
+      "window_index": 0,
+      "input_row": 14,
+      "input_column": 14,
+      "conv2_address": 8174,
+      "value": 1
+    },
+    {
+      "window_index": 1,
+      "input_row": 14,
+      "input_column": 15,
+      "conv2_address": 8175,
+      "value": 3
+    },
+    {
+      "window_index": 2,
+      "input_row": 15,
+      "input_column": 14,
+      "conv2_address": 8190,
+      "value": 3
+    },
+    {
+      "window_index": 3,
+      "input_row": 15,
+      "input_column": 15,
+      "conv2_address": 8191,
+      "value": 2
+    }
+  ],
+  "maximum": 3,
+  "pool2_address": 2047,
+  "pool2_value": 3
+}

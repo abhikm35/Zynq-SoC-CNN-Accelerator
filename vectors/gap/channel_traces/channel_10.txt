@@ -1,0 +1,78 @@
+channel: 10
+addresses: 640 .. 703
+
+elem= 0 addr= 640 value=  13 running_sum=13
+elem= 1 addr= 641 value=  16 running_sum=29
+elem= 2 addr= 642 value=  18 running_sum=47
+elem= 3 addr= 643 value=  22 running_sum=69
+elem= 4 addr= 644 value=  14 running_sum=83
+elem= 5 addr= 645 value=   9 running_sum=92
+elem= 6 addr= 646 value=  11 running_sum=103
+elem= 7 addr= 647 value=   1 running_sum=104
+elem= 8 addr= 648 value=   4 running_sum=108
+elem= 9 addr= 649 value=   5 running_sum=113
+elem=10 addr= 650 value=   0 running_sum=113
+elem=11 addr= 651 value=   0 running_sum=113
+elem=12 addr= 652 value=   0 running_sum=113
+elem=13 addr= 653 value=   0 running_sum=113
+elem=14 addr= 654 value=   3 running_sum=116
+elem=15 addr= 655 value=  11 running_sum=127
+elem=16 addr= 656 value=   1 running_sum=128
+elem=17 addr= 657 value=   5 running_sum=133
+elem=18 addr= 658 value=  30 running_sum=163
+elem=19 addr= 659 value=  37 running_sum=200
+elem=20 addr= 660 value=  44 running_sum=244
+elem=21 addr= 661 value=  39 running_sum=283
+elem=22 addr= 662 value=  22 running_sum=305
+elem=23 addr= 663 value=   7 running_sum=312
+elem=24 addr= 664 value=   3 running_sum=315
+elem=25 addr= 665 value=   3 running_sum=318
+elem=26 addr= 666 value=  21 running_sum=339
+elem=27 addr= 667 value=  22 running_sum=361
+elem=28 addr= 668 value=  20 running_sum=381
+elem=29 addr= 669 value=  22 running_sum=403
+elem=30 addr= 670 value=   6 running_sum=409
+elem=31 addr= 671 value=   3 running_sum=412
+elem=32 addr= 672 value=   0 running_sum=412
+elem=33 addr= 673 value=   0 running_sum=412
+elem=34 addr= 674 value=   4 running_sum=416
+elem=35 addr= 675 value=   0 running_sum=416
+elem=36 addr= 676 value=   1 running_sum=417
+elem=37 addr= 677 value=   3 running_sum=420
+elem=38 addr= 678 value=   2 running_sum=422
+elem=39 addr= 679 value=   6 running_sum=428
+elem=40 addr= 680 value=   4 running_sum=432
+elem=41 addr= 681 value=   2 running_sum=434
+elem=42 addr= 682 value=  10 running_sum=444
+elem=43 addr= 683 value=   3 running_sum=447
+elem=44 addr= 684 value=   0 running_sum=447
+elem=45 addr= 685 value=  15 running_sum=462
+elem=46 addr= 686 value=  13 running_sum=475
+elem=47 addr= 687 value=  15 running_sum=490
+elem=48 addr= 688 value=   0 running_sum=490
+elem=49 addr= 689 value=   7 running_sum=497
+elem=50 addr= 690 value=  30 running_sum=527
+elem=51 addr= 691 value=  41 running_sum=568
+elem=52 addr= 692 value=  43 running_sum=611
+elem=53 addr= 693 value=  41 running_sum=652
+elem=54 addr= 694 value=  10 running_sum=662
+elem=55 addr= 695 value=   0 running_sum=662
+elem=56 addr= 696 value=   0 running_sum=662
+elem=57 addr= 697 value=   0 running_sum=662
+elem=58 addr= 698 value=   1 running_sum=663
+elem=59 addr= 699 value=  13 running_sum=676
+elem=60 addr= 700 value=  13 running_sum=689
+elem=61 addr= 701 value=   0 running_sum=689
+elem=62 addr= 702 value=   0 running_sum=689
+elem=63 addr= 703 value=   0 running_sum=689
+
+final_sum: 689
+division: round_divide_int(sum, 64) ties-away-from-zero
+rounding_half: 32
+value_after_division: 11
+before_saturation: 11
+after_saturation (pool2 scale): 11
+requant multiplier: 1759306569
+requant shift: 29
+final GAP output (flatten scale INT8): 36
+gap_address: 10

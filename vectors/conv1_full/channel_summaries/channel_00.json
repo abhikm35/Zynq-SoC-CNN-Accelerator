@@ -1,0 +1,11 @@
+{
+  "output_channel": 0,
+  "count": 1024,
+  "min": 0,
+  "max": 19,
+  "num_zeros": 858,
+  "num_saturated": 0,
+  "checksum_sum_int64": 744,
+  "address_base": 0,
+  "address_end": 1023
+}

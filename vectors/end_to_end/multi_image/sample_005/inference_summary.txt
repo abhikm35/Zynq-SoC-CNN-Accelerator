@@ -1,0 +1,10 @@
+sample: sample_005
+true_class: 1 (yield)
+predicted_class: 4 (keep_right)
+maximum_logit: -1
+logits: [-26, -2, -13, -8, -1]
+gap checksum: 512
+conv1 checksum: 18149
+pool1 checksum: 6830
+conv2 checksum: 26190
+pool2 checksum: 9880

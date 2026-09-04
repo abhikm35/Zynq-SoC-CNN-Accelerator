@@ -1,0 +1,31 @@
+channel = 8
+pool_row = 2
+pool_column = 6
+
+window 0 (A top-left)
+  input_row = 4
+  input_column = 12
+  conv2_address = 2124
+  value = 0
+
+window 1 (B top-right)
+  input_row = 4
+  input_column = 13
+  conv2_address = 2125
+  value = 0
+
+window 2 (C bottom-left)
+  input_row = 5
+  input_column = 12
+  conv2_address = 2140
+  value = 0
+
+window 3 (D bottom-right)
+  input_row = 5
+  input_column = 13
+  conv2_address = 2141
+  value = 0
+
+maximum = 0
+pool2_address = 534
+pool2_value = 0

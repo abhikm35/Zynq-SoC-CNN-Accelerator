@@ -1,0 +1,78 @@
+channel: 9
+addresses: 576 .. 639
+
+elem= 0 addr= 576 value=   8 running_sum=8
+elem= 1 addr= 577 value=  12 running_sum=20
+elem= 2 addr= 578 value=  13 running_sum=33
+elem= 3 addr= 579 value=   8 running_sum=41
+elem= 4 addr= 580 value=   8 running_sum=49
+elem= 5 addr= 581 value=   9 running_sum=58
+elem= 6 addr= 582 value=   8 running_sum=66
+elem= 7 addr= 583 value=   1 running_sum=67
+elem= 8 addr= 584 value=   3 running_sum=70
+elem= 9 addr= 585 value=   4 running_sum=74
+elem=10 addr= 586 value=   0 running_sum=74
+elem=11 addr= 587 value=   0 running_sum=74
+elem=12 addr= 588 value=   0 running_sum=74
+elem=13 addr= 589 value=   0 running_sum=74
+elem=14 addr= 590 value=   0 running_sum=74
+elem=15 addr= 591 value=   3 running_sum=77
+elem=16 addr= 592 value=   4 running_sum=81
+elem=17 addr= 593 value=   8 running_sum=89
+elem=18 addr= 594 value=  32 running_sum=121
+elem=19 addr= 595 value=  41 running_sum=162
+elem=20 addr= 596 value=  47 running_sum=209
+elem=21 addr= 597 value=  41 running_sum=250
+elem=22 addr= 598 value=  22 running_sum=272
+elem=23 addr= 599 value=   8 running_sum=280
+elem=24 addr= 600 value=   0 running_sum=280
+elem=25 addr= 601 value=  14 running_sum=294
+elem=26 addr= 602 value=  19 running_sum=313
+elem=27 addr= 603 value=  24 running_sum=337
+elem=28 addr= 604 value=  31 running_sum=368
+elem=29 addr= 605 value=  32 running_sum=400
+elem=30 addr= 606 value=  18 running_sum=418
+elem=31 addr= 607 value=   4 running_sum=422
+elem=32 addr= 608 value=   2 running_sum=424
+elem=33 addr= 609 value=   6 running_sum=430
+elem=34 addr= 610 value=  13 running_sum=443
+elem=35 addr= 611 value=   6 running_sum=449
+elem=36 addr= 612 value=   0 running_sum=449
+elem=37 addr= 613 value=   2 running_sum=451
+elem=38 addr= 614 value=   8 running_sum=459
+elem=39 addr= 615 value=   7 running_sum=466
+elem=40 addr= 616 value=   4 running_sum=470
+elem=41 addr= 617 value=  11 running_sum=481
+elem=42 addr= 618 value=  17 running_sum=498
+elem=43 addr= 619 value=  12 running_sum=510
+elem=44 addr= 620 value=  11 running_sum=521
+elem=45 addr= 621 value=  22 running_sum=543
+elem=46 addr= 622 value=  17 running_sum=560
+elem=47 addr= 623 value=  14 running_sum=574
+elem=48 addr= 624 value=   2 running_sum=576
+elem=49 addr= 625 value=  19 running_sum=595
+elem=50 addr= 626 value=  36 running_sum=631
+elem=51 addr= 627 value=  40 running_sum=671
+elem=52 addr= 628 value=  43 running_sum=714
+elem=53 addr= 629 value=  42 running_sum=756
+elem=54 addr= 630 value=  13 running_sum=769
+elem=55 addr= 631 value=   1 running_sum=770
+elem=56 addr= 632 value=   0 running_sum=770
+elem=57 addr= 633 value=   0 running_sum=770
+elem=58 addr= 634 value=  12 running_sum=782
+elem=59 addr= 635 value=  22 running_sum=804
+elem=60 addr= 636 value=  22 running_sum=826
+elem=61 addr= 637 value=   0 running_sum=826
+elem=62 addr= 638 value=   0 running_sum=826
+elem=63 addr= 639 value=   3 running_sum=829
+
+final_sum: 829
+division: round_divide_int(sum, 64) ties-away-from-zero
+rounding_half: 32
+value_after_division: 13
+before_saturation: 13
+after_saturation (pool2 scale): 13
+requant multiplier: 1759306569
+requant shift: 29
+final GAP output (flatten scale INT8): 43
+gap_address: 9

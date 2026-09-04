@@ -1,0 +1,56 @@
+{
+  "name": "alternating",
+  "logits": [
+    1000,
+    -1000,
+    999,
+    -999,
+    998
+  ],
+  "expected_maximum_logit": 1000,
+  "expected_predicted_class": 0,
+  "expected_class_name": "stop",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": 1000,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": 1000,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": -1000,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 1000,
+      "predicted_class": 0
+    },
+    {
+      "index": 2,
+      "logit": 999,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 1000,
+      "predicted_class": 0
+    },
+    {
+      "index": 3,
+      "logit": -999,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 1000,
+      "predicted_class": 0
+    },
+    {
+      "index": 4,
+      "logit": 998,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 1000,
+      "predicted_class": 0
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

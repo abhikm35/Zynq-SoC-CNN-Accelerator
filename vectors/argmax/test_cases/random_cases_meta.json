@@ -1,0 +1,5 @@
+{
+  "count": 512,
+  "seed": 20260804,
+  "format": "per case: 5 logit hex lines, max logit hex, class hex"
+}

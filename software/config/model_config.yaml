@@ -1,0 +1,31 @@
+input:
+  width: 32
+  height: 32
+  channels: 3
+
+model:
+  conv1_output_channels: 16
+  conv1_kernel_size: 3
+  conv1_stride: 1
+  conv1_padding: 1
+
+  pool1_kernel_size: 2
+  pool1_stride: 2
+
+  conv2_output_channels: 32
+  conv2_kernel_size: 3
+  conv2_stride: 1
+  conv2_padding: 1
+
+  pool2_kernel_size: 2
+  pool2_stride: 2
+
+  batch_normalization: true
+  num_classes: 5
+
+classes:
+  - stop
+  - yield
+  - no_entry
+  - speed_limit_30
+  - keep_right

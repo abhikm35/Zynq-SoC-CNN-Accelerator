@@ -1,0 +1,68 @@
+seed: 42
+
+data:
+  root: software/datasets/raw/gtsrb
+  image_width: 32
+  image_height: 32
+  channels: 3
+  validation_fraction: 0.20
+  download: true
+  num_workers: 0
+
+  normalization:
+    mean: [0.401230, 0.358534, 0.368098]
+    std: [0.291221, 0.272794, 0.274302]
+
+  augmentation:
+    rotation_degrees: 8
+    translate_fraction: 0.08
+    scale_min: 0.90
+    scale_max: 1.10
+    brightness: 0.15
+    contrast: 0.15
+
+  selected_classes:
+    - name: stop
+      gtsrb_id: 14
+      project_label: 0
+
+    - name: yield
+      gtsrb_id: 13
+      project_label: 1
+
+    - name: no_entry
+      gtsrb_id: 17
+      project_label: 2
+
+    - name: speed_limit_30
+      gtsrb_id: 1
+      project_label: 3
+
+    - name: keep_right
+      gtsrb_id: 38
+      project_label: 4
+
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0
+
+optimizer:
+  name: adam
+
+loss:
+  class_weighting: inverse_frequency
+
+scheduler:
+  name: reduce_on_plateau
+  factor: 0.5
+  patience: 3
+  min_learning_rate: 0.00001
+
+checkpoint:
+  directory: software/checkpoints
+  filename: tiny_cnn_best.pth
+
+runtime:
+  device: auto

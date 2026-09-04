@@ -1,0 +1,56 @@
+{
+  "name": "int32_max_present",
+  "logits": [
+    0,
+    1,
+    2147483647,
+    2,
+    3
+  ],
+  "expected_maximum_logit": 2147483647,
+  "expected_predicted_class": 2,
+  "expected_class_name": "no_entry",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": 0,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": 0,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": 1,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": 1,
+      "predicted_class": 1
+    },
+    {
+      "index": 2,
+      "logit": 2147483647,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": 2147483647,
+      "predicted_class": 2
+    },
+    {
+      "index": 3,
+      "logit": 2,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 2147483647,
+      "predicted_class": 2
+    },
+    {
+      "index": 4,
+      "logit": 3,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 2147483647,
+      "predicted_class": 2
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

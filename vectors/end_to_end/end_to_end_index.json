@@ -1,0 +1,315 @@
+{
+  "primary_sample": "sample_000",
+  "primary": {
+    "sample_id": "sample_000",
+    "true_class": 0,
+    "predicted_class": 0,
+    "predicted_class_name": "stop",
+    "maximum_logit": 25,
+    "logits": [
+      25,
+      -24,
+      -18,
+      -21,
+      -57
+    ],
+    "gap": [
+      43,
+      7,
+      39,
+      16,
+      52,
+      29,
+      43,
+      39,
+      10,
+      43,
+      36,
+      23,
+      23,
+      23,
+      20,
+      49,
+      36,
+      29,
+      43,
+      49,
+      56,
+      62,
+      29,
+      23,
+      20,
+      52,
+      62,
+      10,
+      36,
+      20,
+      16,
+      23
+    ],
+    "tie_breaking": "lowest_index_strict_greater",
+    "logit_datatype": "int32",
+    "logit_width": 32,
+    "tensor_stats": {
+      "input": {
+        "shape": [
+          3072
+        ],
+        "size": 3072,
+        "dtype": "int8",
+        "checksum": 67149,
+        "min": -45,
+        "max": 127,
+        "zero_count": 41
+      },
+      "conv1_relu": {
+        "shape": [
+          16384
+        ],
+        "size": 16384,
+        "dtype": "int8",
+        "checksum": 69013,
+        "min": 0,
+        "max": 87,
+        "zero_count": 11229
+      },
+      "pool1": {
+        "shape": [
+          4096
+        ],
+        "size": 4096,
+        "dtype": "int8",
+        "checksum": 30347,
+        "min": 0,
+        "max": 87,
+        "zero_count": 2098
+      },
+      "conv2_relu": {
+        "shape": [
+          8192
+        ],
+        "size": 8192,
+        "dtype": "int8",
+        "checksum": 40022,
+        "min": 0,
+        "max": 72,
+        "zero_count": 4392
+      },
+      "pool2": {
+        "shape": [
+          2048
+        ],
+        "size": 2048,
+        "dtype": "int8",
+        "checksum": 20661,
+        "min": 0,
+        "max": 72,
+        "zero_count": 469
+      },
+      "gap": {
+        "shape": [
+          32
+        ],
+        "size": 32,
+        "dtype": "int8",
+        "checksum": 1061,
+        "min": 7,
+        "max": 62,
+        "zero_count": 0
+      },
+      "logits": {
+        "shape": [
+          5
+        ],
+        "size": 5,
+        "dtype": "int32",
+        "checksum": -95,
+        "min": -57,
+        "max": 25,
+        "zero_count": 0
+      }
+    },
+    "shapes": {
+      "input": [
+        3,
+        32,
+        32
+      ],
+      "conv1": [
+        16,
+        32,
+        32
+      ],
+      "pool1": [
+        16,
+        16,
+        16
+      ],
+      "conv2": [
+        32,
+        16,
+        16
+      ],
+      "pool2": [
+        32,
+        8,
+        8
+      ],
+      "gap": [
+        32
+      ],
+      "logits": [
+        5
+      ]
+    },
+    "note": "Trained channel counts are 16/32 (not the obsolete 8/16 prompt sketches). Conv1/Conv2 expected tensors are post-ReLU."
+  },
+  "multi_image": [
+    {
+      "sample_id": "sample_000",
+      "predicted_class": 0,
+      "maximum_logit": 25,
+      "logits": [
+        25,
+        -24,
+        -18,
+        -21,
+        -57
+      ],
+      "checksums": {
+        "input": 67149,
+        "conv1_relu": 69013,
+        "pool1": 30347,
+        "conv2_relu": 40022,
+        "pool2": 20661,
+        "gap": 1061,
+        "logits": -95
+      }
+    },
+    {
+      "sample_id": "sample_001",
+      "predicted_class": 1,
+      "maximum_logit": -6,
+      "logits": [
+        -8,
+        -6,
+        -12,
+        -6,
+        -61
+      ],
+      "checksums": {
+        "input": 101592,
+        "conv1_relu": 78224,
+        "pool1": 30906,
+        "conv2_relu": 38860,
+        "pool2": 19116,
+        "gap": 979,
+        "logits": -93
+      }
+    },
+    {
+      "sample_id": "sample_008",
+      "predicted_class": 2,
+      "maximum_logit": 53,
+      "logits": [
+        -15,
+        -50,
+        53,
+        -56,
+        -74
+      ],
+      "checksums": {
+        "input": -55583,
+        "conv1_relu": 164884,
+        "pool1": 57681,
+        "conv2_relu": 58224,
+        "pool2": 26674,
+        "gap": 1374,
+        "logits": -142
+      }
+    },
+    {
+      "sample_id": "sample_002",
+      "predicted_class": 3,
+      "maximum_logit": -5,
+      "logits": [
+        -6,
+        -7,
+        -9,
+        -5,
+        -48
+      ],
+      "checksums": {
+        "input": 62903,
+        "conv1_relu": 67388,
+        "pool1": 25446,
+        "conv2_relu": 32123,
+        "pool2": 15260,
+        "gap": 775,
+        "logits": -75
+      }
+    },
+    {
+      "sample_id": "sample_005",
+      "predicted_class": 4,
+      "maximum_logit": -1,
+      "logits": [
+        -26,
+        -2,
+        -13,
+        -8,
+        -1
+      ],
+      "checksums": {
+        "input": 31299,
+        "conv1_relu": 18149,
+        "pool1": 6830,
+        "conv2_relu": 26190,
+        "pool2": 9880,
+        "gap": 512,
+        "logits": -50
+      }
+    }
+  ],
+  "class_names": [
+    "stop",
+    "yield",
+    "no_entry",
+    "speed_limit_30",
+    "keep_right"
+  ],
+  "trained_shapes": {
+    "input": [
+      3,
+      32,
+      32
+    ],
+    "conv1": [
+      16,
+      32,
+      32
+    ],
+    "pool1": [
+      16,
+      16,
+      16
+    ],
+    "conv2": [
+      32,
+      16,
+      16
+    ],
+    "pool2": [
+      32,
+      8,
+      8
+    ],
+    "gap": [
+      32
+    ],
+    "logits": [
+      5
+    ]
+  },
+  "obsolete_prompt_shapes_note": "Prompt text that lists 8/16 channels is obsolete; RTL uses 16/32."
+}

@@ -1,0 +1,56 @@
+{
+  "name": "two_equal_maxima",
+  "logits": [
+    100,
+    500,
+    20,
+    500,
+    -10
+  ],
+  "expected_maximum_logit": 500,
+  "expected_predicted_class": 1,
+  "expected_class_name": "yield",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": 100,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": 100,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": 500,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": 500,
+      "predicted_class": 1
+    },
+    {
+      "index": 2,
+      "logit": 20,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 500,
+      "predicted_class": 1
+    },
+    {
+      "index": 3,
+      "logit": 500,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 500,
+      "predicted_class": 1
+    },
+    {
+      "index": 4,
+      "logit": -10,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": 500,
+      "predicted_class": 1
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

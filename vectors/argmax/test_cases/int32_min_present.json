@@ -1,0 +1,56 @@
+{
+  "name": "int32_min_present",
+  "logits": [
+    -2147483648,
+    -1,
+    -2,
+    -3,
+    -4
+  ],
+  "expected_maximum_logit": -1,
+  "expected_predicted_class": 1,
+  "expected_class_name": "yield",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": -2147483648,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": -2147483648,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": -1,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": -1,
+      "predicted_class": 1
+    },
+    {
+      "index": 2,
+      "logit": -2,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -1,
+      "predicted_class": 1
+    },
+    {
+      "index": 3,
+      "logit": -3,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -1,
+      "predicted_class": 1
+    },
+    {
+      "index": 4,
+      "logit": -4,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -1,
+      "predicted_class": 1
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

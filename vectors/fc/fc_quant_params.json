@@ -1,0 +1,42 @@
+{
+  "input_features": 32,
+  "num_classes": 5,
+  "gap_datatype": "int8",
+  "gap_zero_point": 0,
+  "weight_datatype": "int8",
+  "weight_shape": [
+    5,
+    32
+  ],
+  "weight_zero_point": 0,
+  "bias_datatype": "int32",
+  "bias_in_accumulator_units": true,
+  "accumulator_datatype": "int32",
+  "logit_datatype": "int32",
+  "logit_zero_point": 0,
+  "requantize": true,
+  "multipliers": [
+    1963691334,
+    2129410229,
+    1837890433,
+    1921893195,
+    1957596214
+  ],
+  "shifts": [
+    40,
+    40,
+    40,
+    40,
+    40
+  ],
+  "saturation": [
+    -2147483648,
+    2147483647
+  ],
+  "rounding": "ties_away_from_zero",
+  "relu_on_logits": false,
+  "weight_address": "class_index * 32 + input_index",
+  "gap_address": "input_index",
+  "bias_address": "class_index",
+  "logit_address": "class_index"
+}

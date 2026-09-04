@@ -1,0 +1,191 @@
+{
+  "architecture": "MaxPool1 2x2 s2 on Conv1 16x32x32 -> 16x16x16",
+  "note": "Prompt sketches with 8 channels are obsolete; trained model uses 16.",
+  "input_shape": [
+    16,
+    32,
+    32
+  ],
+  "output_shape": [
+    16,
+    16,
+    16
+  ],
+  "kernel": 2,
+  "stride": 2,
+  "operation": "signed_int8_max_of_four",
+  "requantize": false,
+  "relu": false,
+  "flattening": "channel_first_then_row_major",
+  "pool1_address": "channel * 256 + pool_row * 16 + pool_column",
+  "conv1_address": "channel * 1024 + row * 32 + column",
+  "output_count": 4096,
+  "total_conv1_reads": 16384,
+  "min": 0,
+  "max": 87,
+  "num_zeros": 2098,
+  "checksum_sum_int64": 30347,
+  "channels": [
+    {
+      "channel": 0,
+      "count": 256,
+      "min": 0,
+      "max": 19,
+      "num_zeros": 174,
+      "checksum_sum_int64": 443,
+      "address_base": 0,
+      "address_end": 255
+    },
+    {
+      "channel": 1,
+      "count": 256,
+      "min": 0,
+      "max": 27,
+      "num_zeros": 164,
+      "checksum_sum_int64": 1113,
+      "address_base": 256,
+      "address_end": 511
+    },
+    {
+      "channel": 2,
+      "count": 256,
+      "min": 0,
+      "max": 14,
+      "num_zeros": 200,
+      "checksum_sum_int64": 271,
+      "address_base": 512,
+      "address_end": 767
+    },
+    {
+      "channel": 3,
+      "count": 256,
+      "min": 0,
+      "max": 65,
+      "num_zeros": 59,
+      "checksum_sum_int64": 3385,
+      "address_base": 768,
+      "address_end": 1023
+    },
+    {
+      "channel": 4,
+      "count": 256,
+      "min": 0,
+      "max": 55,
+      "num_zeros": 97,
+      "checksum_sum_int64": 2345,
+      "address_base": 1024,
+      "address_end": 1279
+    },
+    {
+      "channel": 5,
+      "count": 256,
+      "min": 0,
+      "max": 55,
+      "num_zeros": 56,
+      "checksum_sum_int64": 3572,
+      "address_base": 1280,
+      "address_end": 1535
+    },
+    {
+      "channel": 6,
+      "count": 256,
+      "min": 0,
+      "max": 30,
+      "num_zeros": 128,
+      "checksum_sum_int64": 1222,
+      "address_base": 1536,
+      "address_end": 1791
+    },
+    {
+      "channel": 7,
+      "count": 256,
+      "min": 0,
+      "max": 40,
+      "num_zeros": 169,
+      "checksum_sum_int64": 932,
+      "address_base": 1792,
+      "address_end": 2047
+    },
+    {
+      "channel": 8,
+      "count": 256,
+      "min": 0,
+      "max": 8,
+      "num_zeros": 230,
+      "checksum_sum_int64": 77,
+      "address_base": 2048,
+      "address_end": 2303
+    },
+    {
+      "channel": 9,
+      "count": 256,
+      "min": 0,
+      "max": 67,
+      "num_zeros": 90,
+      "checksum_sum_int64": 3181,
+      "address_base": 2304,
+      "address_end": 2559
+    },
+    {
+      "channel": 10,
+      "count": 256,
+      "min": 0,
+      "max": 87,
+      "num_zeros": 106,
+      "checksum_sum_int64": 3332,
+      "address_base": 2560,
+      "address_end": 2815
+    },
+    {
+      "channel": 11,
+      "count": 256,
+      "min": 0,
+      "max": 9,
+      "num_zeros": 190,
+      "checksum_sum_int64": 352,
+      "address_base": 2816,
+      "address_end": 3071
+    },
+    {
+      "channel": 12,
+      "count": 256,
+      "min": 0,
+      "max": 49,
+      "num_zeros": 133,
+      "checksum_sum_int64": 2280,
+      "address_base": 3072,
+      "address_end": 3327
+    },
+    {
+      "channel": 13,
+      "count": 256,
+      "min": 0,
+      "max": 61,
+      "num_zeros": 68,
+      "checksum_sum_int64": 2085,
+      "address_base": 3328,
+      "address_end": 3583
+    },
+    {
+      "channel": 14,
+      "count": 256,
+      "min": 0,
+      "max": 27,
+      "num_zeros": 160,
+      "checksum_sum_int64": 1126,
+      "address_base": 3584,
+      "address_end": 3839
+    },
+    {
+      "channel": 15,
+      "count": 256,
+      "min": 0,
+      "max": 65,
+      "num_zeros": 74,
+      "checksum_sum_int64": 4631,
+      "address_base": 3840,
+      "address_end": 4095
+    }
+  ],
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy"
+}

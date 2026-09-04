@@ -1,0 +1,203 @@
+{
+  "architecture": "Conv1 3->16 (trained model)",
+  "note": "Prompt sketches with 8 output channels / 8192 outputs are obsolete. This export is the complete Conv1 tensor: 16 x 32 x 32 = 16384.",
+  "shape": [
+    16,
+    32,
+    32
+  ],
+  "flattening": "channel_first_then_row_major",
+  "address_equation": "output_channel * 1024 + output_row * 32 + output_column",
+  "output_count": 16384,
+  "macs_per_output": 27,
+  "total_macs": 442368,
+  "input_channels_combined": 3,
+  "quantization": "per_output_channel bias, multiplier, shift; zp=0",
+  "dtype": "int8",
+  "min": 0,
+  "max": 87,
+  "num_zeros": 11229,
+  "num_saturated_pos127": 0,
+  "num_saturated_neg128": 0,
+  "num_saturated": 0,
+  "checksum_sum_int64": 69013,
+  "channels": [
+    {
+      "output_channel": 0,
+      "count": 1024,
+      "min": 0,
+      "max": 19,
+      "num_zeros": 858,
+      "num_saturated": 0,
+      "checksum_sum_int64": 744,
+      "address_base": 0,
+      "address_end": 1023
+    },
+    {
+      "output_channel": 1,
+      "count": 1024,
+      "min": 0,
+      "max": 27,
+      "num_zeros": 740,
+      "num_saturated": 0,
+      "checksum_sum_int64": 3257,
+      "address_base": 1024,
+      "address_end": 2047
+    },
+    {
+      "output_channel": 2,
+      "count": 1024,
+      "min": 0,
+      "max": 14,
+      "num_zeros": 931,
+      "num_saturated": 0,
+      "checksum_sum_int64": 421,
+      "address_base": 2048,
+      "address_end": 3071
+    },
+    {
+      "output_channel": 3,
+      "count": 1024,
+      "min": 0,
+      "max": 65,
+      "num_zeros": 525,
+      "num_saturated": 0,
+      "checksum_sum_int64": 6505,
+      "address_base": 3072,
+      "address_end": 4095
+    },
+    {
+      "output_channel": 4,
+      "count": 1024,
+      "min": 0,
+      "max": 55,
+      "num_zeros": 601,
+      "num_saturated": 0,
+      "checksum_sum_int64": 5227,
+      "address_base": 4096,
+      "address_end": 5119
+    },
+    {
+      "output_channel": 5,
+      "count": 1024,
+      "min": 0,
+      "max": 55,
+      "num_zeros": 496,
+      "num_saturated": 0,
+      "checksum_sum_int64": 7710,
+      "address_base": 5120,
+      "address_end": 6143
+    },
+    {
+      "output_channel": 6,
+      "count": 1024,
+      "min": 0,
+      "max": 30,
+      "num_zeros": 752,
+      "num_saturated": 0,
+      "checksum_sum_int64": 2122,
+      "address_base": 6144,
+      "address_end": 7167
+    },
+    {
+      "output_channel": 7,
+      "count": 1024,
+      "min": 0,
+      "max": 40,
+      "num_zeros": 841,
+      "num_saturated": 0,
+      "checksum_sum_int64": 1680,
+      "address_base": 7168,
+      "address_end": 8191
+    },
+    {
+      "output_channel": 8,
+      "count": 1024,
+      "min": 0,
+      "max": 8,
+      "num_zeros": 965,
+      "num_saturated": 0,
+      "checksum_sum_int64": 147,
+      "address_base": 8192,
+      "address_end": 9215
+    },
+    {
+      "output_channel": 9,
+      "count": 1024,
+      "min": 0,
+      "max": 67,
+      "num_zeros": 588,
+      "num_saturated": 0,
+      "checksum_sum_int64": 6473,
+      "address_base": 9216,
+      "address_end": 10239
+    },
+    {
+      "output_channel": 10,
+      "count": 1024,
+      "min": 0,
+      "max": 87,
+      "num_zeros": 604,
+      "num_saturated": 0,
+      "checksum_sum_int64": 8748,
+      "address_base": 10240,
+      "address_end": 11263
+    },
+    {
+      "output_channel": 11,
+      "count": 1024,
+      "min": 0,
+      "max": 9,
+      "num_zeros": 840,
+      "num_saturated": 0,
+      "checksum_sum_int64": 965,
+      "address_base": 11264,
+      "address_end": 12287
+    },
+    {
+      "output_channel": 12,
+      "count": 1024,
+      "min": 0,
+      "max": 49,
+      "num_zeros": 641,
+      "num_saturated": 0,
+      "checksum_sum_int64": 6484,
+      "address_base": 12288,
+      "address_end": 13311
+    },
+    {
+      "output_channel": 13,
+      "count": 1024,
+      "min": 0,
+      "max": 61,
+      "num_zeros": 584,
+      "num_saturated": 0,
+      "checksum_sum_int64": 3945,
+      "address_base": 13312,
+      "address_end": 14335
+    },
+    {
+      "output_channel": 14,
+      "count": 1024,
+      "min": 0,
+      "max": 27,
+      "num_zeros": 746,
+      "num_saturated": 0,
+      "checksum_sum_int64": 3262,
+      "address_base": 14336,
+      "address_end": 15359
+    },
+    {
+      "output_channel": 15,
+      "count": 1024,
+      "min": 0,
+      "max": 65,
+      "num_zeros": 517,
+      "num_saturated": 0,
+      "checksum_sum_int64": 11323,
+      "address_base": 15360,
+      "address_end": 16383
+    }
+  ],
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy"
+}

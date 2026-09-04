@@ -1,0 +1,10 @@
+{
+  "channel": 23,
+  "count": 256,
+  "min": 0,
+  "max": 26,
+  "num_zeros": 141,
+  "checksum_sum_int64": 904,
+  "address_base": 5888,
+  "address_end": 6143
+}

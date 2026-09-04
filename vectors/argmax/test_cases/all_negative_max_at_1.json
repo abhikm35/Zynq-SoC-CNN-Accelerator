@@ -1,0 +1,56 @@
+{
+  "name": "all_negative_max_at_1",
+  "logits": [
+    -10,
+    -5,
+    -20,
+    -8,
+    -30
+  ],
+  "expected_maximum_logit": -5,
+  "expected_predicted_class": 1,
+  "expected_class_name": "yield",
+  "comparison_decisions": [
+    {
+      "index": 0,
+      "logit": -10,
+      "compared": false,
+      "updated": true,
+      "maximum_logit": -10,
+      "predicted_class": 0
+    },
+    {
+      "index": 1,
+      "logit": -5,
+      "compared": true,
+      "updated": true,
+      "maximum_logit": -5,
+      "predicted_class": 1
+    },
+    {
+      "index": 2,
+      "logit": -20,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -5,
+      "predicted_class": 1
+    },
+    {
+      "index": 3,
+      "logit": -8,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -5,
+      "predicted_class": 1
+    },
+    {
+      "index": 4,
+      "logit": -30,
+      "compared": true,
+      "updated": false,
+      "maximum_logit": -5,
+      "predicted_class": 1
+    }
+  ],
+  "tie_breaking": "lowest_index_strict_greater"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "ch3_pr4_pc5",
+  "channel": 3,
+  "pool_row": 4,
+  "pool_column": 5,
+  "window": [
+    {
+      "window_index": 0,
+      "input_row": 8,
+      "input_column": 10,
+      "conv2_address": 906,
+      "value": 2
+    },
+    {
+      "window_index": 1,
+      "input_row": 8,
+      "input_column": 11,
+      "conv2_address": 907,
+      "value": 3
+    },
+    {
+      "window_index": 2,
+      "input_row": 9,
+      "input_column": 10,
+      "conv2_address": 922,
+      "value": 9
+    },
+    {
+      "window_index": 3,
+      "input_row": 9,
+      "input_column": 11,
+      "conv2_address": 923,
+      "value": 8
+    }
+  ],
+  "maximum": 9,
+  "pool2_address": 229,
+  "pool2_value": 9
+}

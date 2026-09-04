@@ -1,0 +1,185 @@
+{
+  "sample_id": "sample_007",
+  "true_class": 1,
+  "float32_predicted_class": 1,
+  "int8_predicted_class": 1,
+  "class_score_scale": 0.1922120451927185,
+  "tensor_shapes": {
+    "input": [
+      1,
+      3,
+      32,
+      32
+    ],
+    "conv1_accumulator": [
+      1,
+      16,
+      32,
+      32
+    ],
+    "conv1": [
+      1,
+      16,
+      32,
+      32
+    ],
+    "relu1": [
+      1,
+      16,
+      32,
+      32
+    ],
+    "pool1": [
+      1,
+      16,
+      16,
+      16
+    ],
+    "conv2_accumulator": [
+      1,
+      32,
+      16,
+      16
+    ],
+    "conv2": [
+      1,
+      32,
+      16,
+      16
+    ],
+    "relu2": [
+      1,
+      32,
+      16,
+      16
+    ],
+    "pool2": [
+      1,
+      32,
+      8,
+      8
+    ],
+    "global_average_pool": [
+      1,
+      32,
+      1,
+      1
+    ],
+    "flatten": [
+      1,
+      32
+    ],
+    "classifier_accumulator": [
+      1,
+      5
+    ],
+    "scores": [
+      1,
+      5
+    ]
+  },
+  "tensor_dtypes": {
+    "input": "int8",
+    "conv1_accumulator": "int32",
+    "conv1": "int8",
+    "relu1": "int8",
+    "pool1": "int8",
+    "conv2_accumulator": "int32",
+    "conv2": "int8",
+    "relu2": "int8",
+    "pool2": "int8",
+    "global_average_pool": "int8",
+    "flatten": "int8",
+    "classifier_accumulator": "int32",
+    "scores": "int32"
+  },
+  "min_max": {
+    "input": {
+      "min": -64,
+      "max": 127
+    },
+    "conv1_accumulator": {
+      "min": -91635,
+      "max": 42857
+    },
+    "conv1": {
+      "min": -106,
+      "max": 90
+    },
+    "relu1": {
+      "min": 0,
+      "max": 90
+    },
+    "pool1": {
+      "min": 0,
+      "max": 90
+    },
+    "conv2_accumulator": {
+      "min": -34967,
+      "max": 30736
+    },
+    "conv2": {
+      "min": -63,
+      "max": 86
+    },
+    "relu2": {
+      "min": 0,
+      "max": 86
+    },
+    "pool2": {
+      "min": 0,
+      "max": 86
+    },
+    "global_average_pool": {
+      "min": 13,
+      "max": 79
+    },
+    "flatten": {
+      "min": 13,
+      "max": 79
+    },
+    "classifier_accumulator": {
+      "min": -40743,
+      "max": 6174
+    },
+    "scores": {
+      "min": -73,
+      "max": 12
+    }
+  },
+  "saturation_counts": {
+    "input": 20,
+    "conv1": 0,
+    "relu1": 0,
+    "pool1": 0,
+    "conv2": 0,
+    "relu2": 0,
+    "pool2": 0,
+    "global_average_pool": 0
+  },
+  "accumulator_max_magnitudes": {
+    "conv1": 91635,
+    "conv2": 34967,
+    "classifier": 40743
+  },
+  "source_image_identifier": {
+    "sample_id": "sample_007",
+    "dataset_index": 8,
+    "source_class": "yield",
+    "source_class_index": 1,
+    "predicted_class": "yield",
+    "predicted_class_index": 1,
+    "correct": true,
+    "raw_class_scores": [
+      -2.898960590362549,
+      2.301671266555786,
+      -7.398645401000977,
+      0.48652321100234985,
+      -14.032266616821289
+    ],
+    "confidence": 0.8558799028396606,
+    "source_image_filename": "sample_007_yield.png",
+    "source_identifier": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/datasets/raw/gtsrb/gtsrb/GTSRB/Final_Test/Images/00051.ppm",
+    "selection_reason": "deterministic_variety"
+  }
+}

@@ -1,0 +1,898 @@
+[
+  {
+    "name": "largest_at_0",
+    "logits": [
+      500,
+      20,
+      10,
+      0,
+      -1
+    ],
+    "expected_maximum_logit": 500,
+    "expected_predicted_class": 0,
+    "expected_class_name": "stop",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 500,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 500,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 20,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": 10,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": 0,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 0
+      },
+      {
+        "index": 4,
+        "logit": -1,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 0
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "largest_at_1",
+    "logits": [
+      -10,
+      200,
+      30,
+      40,
+      50
+    ],
+    "expected_maximum_logit": 200,
+    "expected_predicted_class": 1,
+    "expected_class_name": "yield",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -10,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -10,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 200,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 200,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": 30,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 200,
+        "predicted_class": 1
+      },
+      {
+        "index": 3,
+        "logit": 40,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 200,
+        "predicted_class": 1
+      },
+      {
+        "index": 4,
+        "logit": 50,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 200,
+        "predicted_class": 1
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "largest_at_2",
+    "logits": [
+      -10,
+      -20,
+      300,
+      -40,
+      -50
+    ],
+    "expected_maximum_logit": 300,
+    "expected_predicted_class": 2,
+    "expected_class_name": "no_entry",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -10,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -10,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -20,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -10,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": 300,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 300,
+        "predicted_class": 2
+      },
+      {
+        "index": 3,
+        "logit": -40,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 300,
+        "predicted_class": 2
+      },
+      {
+        "index": 4,
+        "logit": -50,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 300,
+        "predicted_class": 2
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "largest_at_3",
+    "logits": [
+      -100,
+      -200,
+      -300,
+      -1,
+      -400
+    ],
+    "expected_maximum_logit": -1,
+    "expected_predicted_class": 3,
+    "expected_class_name": "speed_limit_30",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -100,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -200,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": -300,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": -1,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": -1,
+        "predicted_class": 3
+      },
+      {
+        "index": 4,
+        "logit": -400,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -1,
+        "predicted_class": 3
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "largest_at_4",
+    "logits": [
+      -100,
+      -200,
+      -300,
+      -400,
+      0
+    ],
+    "expected_maximum_logit": 0,
+    "expected_predicted_class": 4,
+    "expected_class_name": "keep_right",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -100,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -200,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": -300,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": -400,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -100,
+        "predicted_class": 0
+      },
+      {
+        "index": 4,
+        "logit": 0,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 0,
+        "predicted_class": 4
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "all_negative_max_at_1",
+    "logits": [
+      -10,
+      -5,
+      -20,
+      -8,
+      -30
+    ],
+    "expected_maximum_logit": -5,
+    "expected_predicted_class": 1,
+    "expected_class_name": "yield",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -10,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -10,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -5,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": -5,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": -20,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -5,
+        "predicted_class": 1
+      },
+      {
+        "index": 3,
+        "logit": -8,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -5,
+        "predicted_class": 1
+      },
+      {
+        "index": 4,
+        "logit": -30,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -5,
+        "predicted_class": 1
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "two_equal_maxima",
+    "logits": [
+      100,
+      500,
+      20,
+      500,
+      -10
+    ],
+    "expected_maximum_logit": 500,
+    "expected_predicted_class": 1,
+    "expected_class_name": "yield",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 100,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 100,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 500,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 500,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": 20,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 1
+      },
+      {
+        "index": 3,
+        "logit": 500,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 1
+      },
+      {
+        "index": 4,
+        "logit": -10,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 500,
+        "predicted_class": 1
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "all_equal",
+    "logits": [
+      7,
+      7,
+      7,
+      7,
+      7
+    ],
+    "expected_maximum_logit": 7,
+    "expected_predicted_class": 0,
+    "expected_class_name": "stop",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 7,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 7,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 7,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 7,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": 7,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 7,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": 7,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 7,
+        "predicted_class": 0
+      },
+      {
+        "index": 4,
+        "logit": 7,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 7,
+        "predicted_class": 0
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "mixed_pos_neg",
+    "logits": [
+      -50,
+      10,
+      -3,
+      8,
+      -100
+    ],
+    "expected_maximum_logit": 10,
+    "expected_predicted_class": 1,
+    "expected_class_name": "yield",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -50,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -50,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 10,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 10,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": -3,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 10,
+        "predicted_class": 1
+      },
+      {
+        "index": 3,
+        "logit": 8,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 10,
+        "predicted_class": 1
+      },
+      {
+        "index": 4,
+        "logit": -100,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 10,
+        "predicted_class": 1
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "exactly_one_positive",
+    "logits": [
+      -5,
+      -9,
+      -2,
+      1,
+      -40
+    ],
+    "expected_maximum_logit": 1,
+    "expected_predicted_class": 3,
+    "expected_class_name": "speed_limit_30",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -5,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -5,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -9,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -5,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": -2,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": -2,
+        "predicted_class": 2
+      },
+      {
+        "index": 3,
+        "logit": 1,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 1,
+        "predicted_class": 3
+      },
+      {
+        "index": 4,
+        "logit": -40,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 1,
+        "predicted_class": 3
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "three_equal_maxima",
+    "logits": [
+      1,
+      1,
+      5,
+      5,
+      5
+    ],
+    "expected_maximum_logit": 5,
+    "expected_predicted_class": 2,
+    "expected_class_name": "no_entry",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 1,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 1,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 1,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 1,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": 5,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 5,
+        "predicted_class": 2
+      },
+      {
+        "index": 3,
+        "logit": 5,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 5,
+        "predicted_class": 2
+      },
+      {
+        "index": 4,
+        "logit": 5,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 5,
+        "predicted_class": 2
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "max_first_and_last_tie",
+    "logits": [
+      9,
+      1,
+      2,
+      3,
+      9
+    ],
+    "expected_maximum_logit": 9,
+    "expected_predicted_class": 0,
+    "expected_class_name": "stop",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 9,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 9,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 1,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 9,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": 2,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 9,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": 3,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 9,
+        "predicted_class": 0
+      },
+      {
+        "index": 4,
+        "logit": 9,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 9,
+        "predicted_class": 0
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "int32_min_present",
+    "logits": [
+      -2147483648,
+      -1,
+      -2,
+      -3,
+      -4
+    ],
+    "expected_maximum_logit": -1,
+    "expected_predicted_class": 1,
+    "expected_class_name": "yield",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -2147483648,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -2147483648,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -1,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": -1,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": -2,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -1,
+        "predicted_class": 1
+      },
+      {
+        "index": 3,
+        "logit": -3,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -1,
+        "predicted_class": 1
+      },
+      {
+        "index": 4,
+        "logit": -4,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": -1,
+        "predicted_class": 1
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "int32_max_present",
+    "logits": [
+      0,
+      1,
+      2147483647,
+      2,
+      3
+    ],
+    "expected_maximum_logit": 2147483647,
+    "expected_predicted_class": 2,
+    "expected_class_name": "no_entry",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 0,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 0,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 1,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 1,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": 2147483647,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 2147483647,
+        "predicted_class": 2
+      },
+      {
+        "index": 3,
+        "logit": 2,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 2147483647,
+        "predicted_class": 2
+      },
+      {
+        "index": 4,
+        "logit": 3,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 2147483647,
+        "predicted_class": 2
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "int32_minmax",
+    "logits": [
+      -2147483648,
+      0,
+      2147483647,
+      -100,
+      100
+    ],
+    "expected_maximum_logit": 2147483647,
+    "expected_predicted_class": 2,
+    "expected_class_name": "no_entry",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": -2147483648,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": -2147483648,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": 0,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 0,
+        "predicted_class": 1
+      },
+      {
+        "index": 2,
+        "logit": 2147483647,
+        "compared": true,
+        "updated": true,
+        "maximum_logit": 2147483647,
+        "predicted_class": 2
+      },
+      {
+        "index": 3,
+        "logit": -100,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 2147483647,
+        "predicted_class": 2
+      },
+      {
+        "index": 4,
+        "logit": 100,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 2147483647,
+        "predicted_class": 2
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  },
+  {
+    "name": "alternating",
+    "logits": [
+      1000,
+      -1000,
+      999,
+      -999,
+      998
+    ],
+    "expected_maximum_logit": 1000,
+    "expected_predicted_class": 0,
+    "expected_class_name": "stop",
+    "comparison_decisions": [
+      {
+        "index": 0,
+        "logit": 1000,
+        "compared": false,
+        "updated": true,
+        "maximum_logit": 1000,
+        "predicted_class": 0
+      },
+      {
+        "index": 1,
+        "logit": -1000,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 1000,
+        "predicted_class": 0
+      },
+      {
+        "index": 2,
+        "logit": 999,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 1000,
+        "predicted_class": 0
+      },
+      {
+        "index": 3,
+        "logit": -999,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 1000,
+        "predicted_class": 0
+      },
+      {
+        "index": 4,
+        "logit": 998,
+        "compared": true,
+        "updated": false,
+        "maximum_logit": 1000,
+        "predicted_class": 0
+      }
+    ],
+    "tie_breaking": "lowest_index_strict_greater"
+  }
+]

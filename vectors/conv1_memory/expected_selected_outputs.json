@@ -1,0 +1,60 @@
+{
+  "cases": {
+    "center": {
+      "name": "center",
+      "output_channel": 0,
+      "output_row": 10,
+      "output_column": 10,
+      "bias_address": 0,
+      "bias": -1673,
+      "multiplier": 1231684457,
+      "shift": 39,
+      "final_accumulator": 88,
+      "requantized": 0,
+      "relu": 0,
+      "mac_count": 27
+    },
+    "top_left": {
+      "name": "top_left",
+      "output_channel": 0,
+      "output_row": 0,
+      "output_column": 0,
+      "bias_address": 0,
+      "bias": -1673,
+      "multiplier": 1231684457,
+      "shift": 39,
+      "final_accumulator": -24264,
+      "requantized": -54,
+      "relu": 0,
+      "mac_count": 27
+    },
+    "bottom_right": {
+      "name": "bottom_right",
+      "output_channel": 0,
+      "output_row": 31,
+      "output_column": 31,
+      "bias_address": 0,
+      "bias": -1673,
+      "multiplier": 1231684457,
+      "shift": 39,
+      "final_accumulator": -859,
+      "requantized": -2,
+      "relu": 0,
+      "mac_count": 27
+    },
+    "channel5": {
+      "name": "channel5",
+      "output_channel": 5,
+      "output_row": 12,
+      "output_column": 17,
+      "bias_address": 5,
+      "bias": -671,
+      "multiplier": 2145518394,
+      "shift": 40,
+      "final_accumulator": -10836,
+      "requantized": -21,
+      "relu": 0,
+      "mac_count": 27
+    }
+  }
+}

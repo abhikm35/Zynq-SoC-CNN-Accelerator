@@ -1,0 +1,351 @@
+{
+  "architecture": "MaxPool2 2x2 s2 on Conv2 32x16x16 -> 32x8x8",
+  "note": "Prompt sketches with 16 channels are obsolete; trained model uses 32.",
+  "input_shape": [
+    32,
+    16,
+    16
+  ],
+  "output_shape": [
+    32,
+    8,
+    8
+  ],
+  "kernel": 2,
+  "stride": 2,
+  "operation": "signed_int8_max_of_four",
+  "requantize": false,
+  "relu": false,
+  "flattening": "channel_first_then_row_major",
+  "pool2_address": "channel * 64 + pool_row * 8 + pool_column",
+  "conv2_address": "channel * 256 + row * 16 + column",
+  "output_count": 2048,
+  "total_conv2_reads": 8192,
+  "min": 0,
+  "max": 72,
+  "num_zeros": 469,
+  "checksum_sum_int64": 20661,
+  "channels": [
+    {
+      "channel": 0,
+      "count": 64,
+      "min": 0,
+      "max": 47,
+      "num_zeros": 9,
+      "checksum_sum_int64": 806,
+      "address_base": 0,
+      "address_end": 63
+    },
+    {
+      "channel": 1,
+      "count": 64,
+      "min": 0,
+      "max": 12,
+      "num_zeros": 31,
+      "checksum_sum_int64": 151,
+      "address_base": 64,
+      "address_end": 127
+    },
+    {
+      "channel": 2,
+      "count": 64,
+      "min": 0,
+      "max": 36,
+      "num_zeros": 8,
+      "checksum_sum_int64": 737,
+      "address_base": 128,
+      "address_end": 191
+    },
+    {
+      "channel": 3,
+      "count": 64,
+      "min": 0,
+      "max": 36,
+      "num_zeros": 28,
+      "checksum_sum_int64": 311,
+      "address_base": 192,
+      "address_end": 255
+    },
+    {
+      "channel": 4,
+      "count": 64,
+      "min": 0,
+      "max": 51,
+      "num_zeros": 5,
+      "checksum_sum_int64": 1046,
+      "address_base": 256,
+      "address_end": 319
+    },
+    {
+      "channel": 5,
+      "count": 64,
+      "min": 0,
+      "max": 39,
+      "num_zeros": 15,
+      "checksum_sum_int64": 587,
+      "address_base": 320,
+      "address_end": 383
+    },
+    {
+      "channel": 6,
+      "count": 64,
+      "min": 0,
+      "max": 45,
+      "num_zeros": 6,
+      "checksum_sum_int64": 848,
+      "address_base": 384,
+      "address_end": 447
+    },
+    {
+      "channel": 7,
+      "count": 64,
+      "min": 0,
+      "max": 50,
+      "num_zeros": 5,
+      "checksum_sum_int64": 762,
+      "address_base": 448,
+      "address_end": 511
+    },
+    {
+      "channel": 8,
+      "count": 64,
+      "min": 0,
+      "max": 19,
+      "num_zeros": 28,
+      "checksum_sum_int64": 186,
+      "address_base": 512,
+      "address_end": 575
+    },
+    {
+      "channel": 9,
+      "count": 64,
+      "min": 0,
+      "max": 47,
+      "num_zeros": 11,
+      "checksum_sum_int64": 829,
+      "address_base": 576,
+      "address_end": 639
+    },
+    {
+      "channel": 10,
+      "count": 64,
+      "min": 0,
+      "max": 44,
+      "num_zeros": 15,
+      "checksum_sum_int64": 689,
+      "address_base": 640,
+      "address_end": 703
+    },
+    {
+      "channel": 11,
+      "count": 64,
+      "min": 0,
+      "max": 32,
+      "num_zeros": 20,
+      "checksum_sum_int64": 436,
+      "address_base": 704,
+      "address_end": 767
+    },
+    {
+      "channel": 12,
+      "count": 64,
+      "min": 0,
+      "max": 39,
+      "num_zeros": 20,
+      "checksum_sum_int64": 456,
+      "address_base": 768,
+      "address_end": 831
+    },
+    {
+      "channel": 13,
+      "count": 64,
+      "min": 0,
+      "max": 47,
+      "num_zeros": 23,
+      "checksum_sum_int64": 450,
+      "address_base": 832,
+      "address_end": 895
+    },
+    {
+      "channel": 14,
+      "count": 64,
+      "min": 0,
+      "max": 19,
+      "num_zeros": 17,
+      "checksum_sum_int64": 379,
+      "address_base": 896,
+      "address_end": 959
+    },
+    {
+      "channel": 15,
+      "count": 64,
+      "min": 0,
+      "max": 51,
+      "num_zeros": 5,
+      "checksum_sum_int64": 967,
+      "address_base": 960,
+      "address_end": 1023
+    },
+    {
+      "channel": 16,
+      "count": 64,
+      "min": 0,
+      "max": 31,
+      "num_zeros": 7,
+      "checksum_sum_int64": 716,
+      "address_base": 1024,
+      "address_end": 1087
+    },
+    {
+      "channel": 17,
+      "count": 64,
+      "min": 0,
+      "max": 36,
+      "num_zeros": 12,
+      "checksum_sum_int64": 556,
+      "address_base": 1088,
+      "address_end": 1151
+    },
+    {
+      "channel": 18,
+      "count": 64,
+      "min": 0,
+      "max": 41,
+      "num_zeros": 20,
+      "checksum_sum_int64": 813,
+      "address_base": 1152,
+      "address_end": 1215
+    },
+    {
+      "channel": 19,
+      "count": 64,
+      "min": 0,
+      "max": 54,
+      "num_zeros": 6,
+      "checksum_sum_int64": 984,
+      "address_base": 1216,
+      "address_end": 1279
+    },
+    {
+      "channel": 20,
+      "count": 64,
+      "min": 0,
+      "max": 48,
+      "num_zeros": 4,
+      "checksum_sum_int64": 1061,
+      "address_base": 1280,
+      "address_end": 1343
+    },
+    {
+      "channel": 21,
+      "count": 64,
+      "min": 0,
+      "max": 64,
+      "num_zeros": 2,
+      "checksum_sum_int64": 1240,
+      "address_base": 1344,
+      "address_end": 1407
+    },
+    {
+      "channel": 22,
+      "count": 64,
+      "min": 0,
+      "max": 41,
+      "num_zeros": 19,
+      "checksum_sum_int64": 596,
+      "address_base": 1408,
+      "address_end": 1471
+    },
+    {
+      "channel": 23,
+      "count": 64,
+      "min": 0,
+      "max": 26,
+      "num_zeros": 21,
+      "checksum_sum_int64": 434,
+      "address_base": 1472,
+      "address_end": 1535
+    },
+    {
+      "channel": 24,
+      "count": 64,
+      "min": 0,
+      "max": 27,
+      "num_zeros": 25,
+      "checksum_sum_int64": 375,
+      "address_base": 1536,
+      "address_end": 1599
+    },
+    {
+      "channel": 25,
+      "count": 64,
+      "min": 0,
+      "max": 55,
+      "num_zeros": 5,
+      "checksum_sum_int64": 1015,
+      "address_base": 1600,
+      "address_end": 1663
+    },
+    {
+      "channel": 26,
+      "count": 64,
+      "min": 0,
+      "max": 72,
+      "num_zeros": 1,
+      "checksum_sum_int64": 1228,
+      "address_base": 1664,
+      "address_end": 1727
+    },
+    {
+      "channel": 27,
+      "count": 64,
+      "min": 0,
+      "max": 11,
+      "num_zeros": 25,
+      "checksum_sum_int64": 190,
+      "address_base": 1728,
+      "address_end": 1791
+    },
+    {
+      "channel": 28,
+      "count": 64,
+      "min": 0,
+      "max": 32,
+      "num_zeros": 15,
+      "checksum_sum_int64": 680,
+      "address_base": 1792,
+      "address_end": 1855
+    },
+    {
+      "channel": 29,
+      "count": 64,
+      "min": 0,
+      "max": 47,
+      "num_zeros": 22,
+      "checksum_sum_int64": 360,
+      "address_base": 1856,
+      "address_end": 1919
+    },
+    {
+      "channel": 30,
+      "count": 64,
+      "min": 0,
+      "max": 25,
+      "num_zeros": 18,
+      "checksum_sum_int64": 348,
+      "address_base": 1920,
+      "address_end": 1983
+    },
+    {
+      "channel": 31,
+      "count": 64,
+      "min": 0,
+      "max": 47,
+      "num_zeros": 21,
+      "checksum_sum_int64": 425,
+      "address_base": 1984,
+      "address_end": 2047
+    }
+  ],
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy"
+}

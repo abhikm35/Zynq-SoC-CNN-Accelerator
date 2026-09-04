@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Software / training artifacts (existing policy)
+software/datasets/raw/
+software/datasets/processed/
+software/checkpoints/*.pth
+!software/checkpoints/.gitkeep
+software/exported_model/float32/
+software/exported_model/test_vectors/float32/
+software/exported_model/test_vectors/source_images/
+software/exported_model/test_vectors/reference_manifest.json
+results/accuracy/*.json
+results/accuracy/*.npy
+results/accuracy/*.csv
+results/comparisons/*.json
+!results/accuracy/.gitkeep
+!results/comparisons/.gitkeep
+
+# Local Verilator / RTL sim build outputs
+build/
+*.vcd
+*.fst
+*.saif
+
+# Vivado generated / disposable build outputs
+.Xil/
+*.jou
+*.log
+*.str
+*.wdb
+*.pb
+*.dcp
+*.rpt.tmp
+*.cache/
+*.runs/
+*.sim/
+*.gen/
+*.hw/
+*.ip_user_files/
+*.xpr.bak
+vivado_build/
+vivado_output/
+vivado_project/
+vivado/*.xpr
+vivado/*.cache/
+vivado/*.runs/
+vivado/*.sim/
+vivado/*.gen/
+vivado/*.hw/
+vivado/*.ip_user_files/
+vivado/generated/*
+!vivado/generated/.gitkeep

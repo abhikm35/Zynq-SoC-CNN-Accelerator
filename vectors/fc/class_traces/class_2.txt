@@ -1,0 +1,46 @@
+class_index: 2
+bias_address: 2
+bias_value: -661
+multiplier: 1837890433
+shift: 40
+
+i= 0 gap_addr= 0 gap=  43 wgt_addr= 64 wgt=  65 prod=   2795 acc=2134
+i= 1 gap_addr= 1 gap=   7 wgt_addr= 65 wgt= -32 prod=   -224 acc=1910
+i= 2 gap_addr= 2 gap=  39 wgt_addr= 66 wgt=  51 prod=   1989 acc=3899
+i= 3 gap_addr= 3 gap=  16 wgt_addr= 67 wgt=  66 prod=   1056 acc=4955
+i= 4 gap_addr= 4 gap=  52 wgt_addr= 68 wgt=-100 prod=  -5200 acc=-245
+i= 5 gap_addr= 5 gap=  29 wgt_addr= 69 wgt= -13 prod=   -377 acc=-622
+i= 6 gap_addr= 6 gap=  43 wgt_addr= 70 wgt=  60 prod=   2580 acc=1958
+i= 7 gap_addr= 7 gap=  39 wgt_addr= 71 wgt= -65 prod=  -2535 acc=-577
+i= 8 gap_addr= 8 gap=  10 wgt_addr= 72 wgt=  -7 prod=    -70 acc=-647
+i= 9 gap_addr= 9 gap=  43 wgt_addr= 73 wgt=  73 prod=   3139 acc=2492
+i=10 gap_addr=10 gap=  36 wgt_addr= 74 wgt= 104 prod=   3744 acc=6236
+i=11 gap_addr=11 gap=  23 wgt_addr= 75 wgt= -12 prod=   -276 acc=5960
+i=12 gap_addr=12 gap=  23 wgt_addr= 76 wgt= -75 prod=  -1725 acc=4235
+i=13 gap_addr=13 gap=  23 wgt_addr= 77 wgt= -57 prod=  -1311 acc=2924
+i=14 gap_addr=14 gap=  20 wgt_addr= 78 wgt=  38 prod=    760 acc=3684
+i=15 gap_addr=15 gap=  49 wgt_addr= 79 wgt=  36 prod=   1764 acc=5448
+i=16 gap_addr=16 gap=  36 wgt_addr= 80 wgt= -63 prod=  -2268 acc=3180
+i=17 gap_addr=17 gap=  29 wgt_addr= 81 wgt=  58 prod=   1682 acc=4862
+i=18 gap_addr=18 gap=  43 wgt_addr= 82 wgt=  55 prod=   2365 acc=7227
+i=19 gap_addr=19 gap=  49 wgt_addr= 83 wgt= -70 prod=  -3430 acc=3797
+i=20 gap_addr=20 gap=  56 wgt_addr= 84 wgt=  24 prod=   1344 acc=5141
+i=21 gap_addr=21 gap=  62 wgt_addr= 85 wgt= -92 prod=  -5704 acc=-563
+i=22 gap_addr=22 gap=  29 wgt_addr= 86 wgt= 101 prod=   2929 acc=2366
+i=23 gap_addr=23 gap=  23 wgt_addr= 87 wgt=  21 prod=    483 acc=2849
+i=24 gap_addr=24 gap=  20 wgt_addr= 88 wgt=  -1 prod=    -20 acc=2829
+i=25 gap_addr=25 gap=  52 wgt_addr= 89 wgt=-101 prod=  -5252 acc=-2423
+i=26 gap_addr=26 gap=  62 wgt_addr= 90 wgt=-127 prod=  -7874 acc=-10297
+i=27 gap_addr=27 gap=  10 wgt_addr= 91 wgt= -38 prod=   -380 acc=-10677
+i=28 gap_addr=28 gap=  36 wgt_addr= 92 wgt=  81 prod=   2916 acc=-7761
+i=29 gap_addr=29 gap=  20 wgt_addr= 93 wgt=-106 prod=  -2120 acc=-9881
+i=30 gap_addr=30 gap=  16 wgt_addr= 94 wgt=  49 prod=    784 acc=-9097
+i=31 gap_addr=31 gap=  23 wgt_addr= 95 wgt= -62 prod=  -1426 acc=-10523
+
+final_accumulator: -10523
+requant multiplier: 1837890433
+requant shift: 40
+rounding: ties away from zero
+saturation: full INT32 (no INT8 clip)
+ReLU: not applied
+final_logit: -18 (0xffffffee)

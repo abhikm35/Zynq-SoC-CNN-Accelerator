@@ -1,0 +1,165 @@
+{
+  "operation": "fully_connected_classifier",
+  "note": "Trained Linear 32->5. Logits are INT32 after per-class requant.",
+  "input_features": 32,
+  "num_classes": 5,
+  "num_weights": 160,
+  "macs_per_class": 32,
+  "total_macs": 160,
+  "gap_values": [
+    43,
+    7,
+    39,
+    16,
+    52,
+    29,
+    43,
+    39,
+    10,
+    43,
+    36,
+    23,
+    23,
+    23,
+    20,
+    49,
+    36,
+    29,
+    43,
+    49,
+    56,
+    62,
+    29,
+    23,
+    20,
+    52,
+    62,
+    10,
+    36,
+    20,
+    16,
+    23
+  ],
+  "biases": [
+    -319,
+    245,
+    -661,
+    629,
+    -383
+  ],
+  "accumulators": [
+    14026,
+    -12650,
+    -10523,
+    -12252,
+    -31911
+  ],
+  "logits": [
+    25,
+    -24,
+    -18,
+    -21,
+    -57
+  ],
+  "predicted_class_argmax": 0,
+  "classes": [
+    {
+      "class_index": 0,
+      "bias": -319,
+      "final_accumulator": 14026,
+      "multiplier": 1963691334,
+      "shift": 40,
+      "output_zero_point": 0,
+      "logit": 25,
+      "logit_hex": "00000019",
+      "mac_count": 32
+    },
+    {
+      "class_index": 1,
+      "bias": 245,
+      "final_accumulator": -12650,
+      "multiplier": 2129410229,
+      "shift": 40,
+      "output_zero_point": 0,
+      "logit": -24,
+      "logit_hex": "ffffffe8",
+      "mac_count": 32
+    },
+    {
+      "class_index": 2,
+      "bias": -661,
+      "final_accumulator": -10523,
+      "multiplier": 1837890433,
+      "shift": 40,
+      "output_zero_point": 0,
+      "logit": -18,
+      "logit_hex": "ffffffee",
+      "mac_count": 32
+    },
+    {
+      "class_index": 3,
+      "bias": 629,
+      "final_accumulator": -12252,
+      "multiplier": 1921893195,
+      "shift": 40,
+      "output_zero_point": 0,
+      "logit": -21,
+      "logit_hex": "ffffffeb",
+      "mac_count": 32
+    },
+    {
+      "class_index": 4,
+      "bias": -383,
+      "final_accumulator": -31911,
+      "multiplier": 1957596214,
+      "shift": 40,
+      "output_zero_point": 0,
+      "logit": -57,
+      "logit_hex": "ffffffc7",
+      "mac_count": 32
+    }
+  ],
+  "quant": {
+    "input_features": 32,
+    "num_classes": 5,
+    "gap_datatype": "int8",
+    "gap_zero_point": 0,
+    "weight_datatype": "int8",
+    "weight_shape": [
+      5,
+      32
+    ],
+    "weight_zero_point": 0,
+    "bias_datatype": "int32",
+    "bias_in_accumulator_units": true,
+    "accumulator_datatype": "int32",
+    "logit_datatype": "int32",
+    "logit_zero_point": 0,
+    "requantize": true,
+    "multipliers": [
+      1963691334,
+      2129410229,
+      1837890433,
+      1921893195,
+      1957596214
+    ],
+    "shifts": [
+      40,
+      40,
+      40,
+      40,
+      40
+    ],
+    "saturation": [
+      -2147483648,
+      2147483647
+    ],
+    "rounding": "ties_away_from_zero",
+    "relu_on_logits": false,
+    "weight_address": "class_index * 32 + input_index",
+    "gap_address": "input_index",
+    "bias_address": "class_index",
+    "logit_address": "class_index"
+  },
+  "source_input": "/nethome/amojumdar6/zynq-edge-ai-classifier/software/exported_model/int8/test_vectors/sample_000/input.npy"
+}

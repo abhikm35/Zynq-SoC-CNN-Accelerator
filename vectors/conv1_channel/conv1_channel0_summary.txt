@@ -1,0 +1,15 @@
+Conv1 output channel 0 expected feature map
+shape: [1, 32, 32]  entries: 1024
+address: row*32 + col  (row-major)
+min=0 max=19
+zeros=858 saturated=0
+checksum_sum=744
+macs_per_output=27 (3 input channels x 3x3)
+
+Selected pixels:
+  r0_c0: (0,0) addr=0 value=0
+  r0_c31: (0,31) addr=31 value=0
+  r10_c10: (10,10) addr=330 value=0
+  r15_c15: (15,15) addr=495 value=0
+  r31_c0: (31,0) addr=992 value=4
+  r31_c31: (31,31) addr=1023 value=0

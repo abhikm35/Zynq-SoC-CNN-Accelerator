@@ -1,0 +1,10 @@
+sample: sample_002
+true_class: 0 (stop)
+predicted_class: 3 (speed_limit_30)
+maximum_logit: -5
+logits: [-6, -7, -9, -5, -48]
+gap checksum: 775
+conv1 checksum: 67388
+pool1 checksum: 25446
+conv2 checksum: 32123
+pool2 checksum: 15260

@@ -1,0 +1,7 @@
+Argmax vector export summary
+Real logits: [25, -24, -18, -21, -57]
+Expected max logit: 25
+Expected class: 0 (stop)
+Tie-breaking: lowest index (strict >)
+Directed cases: 16
+Random cases: 512
