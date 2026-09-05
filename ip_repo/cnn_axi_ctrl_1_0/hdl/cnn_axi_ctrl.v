@@ -4,7 +4,7 @@
 	module cnn_axi_ctrl #
 	(
 		// Users to add parameters here
-
+		parameter integer C_CNN_LOGIT_WIDTH = 32,
 		// User parameters ends
 		// Do not modify the parameters beyond this line
 
@@ -15,7 +15,21 @@
 	)
 	(
 		// Users to add ports here
-
+		// Plain RTL-side interface to the timing-closed CNN accelerator.
+		// Same PL clock as s00_axi_aclk is assumed until the BD proves otherwise.
+		// CNN core reset is active-HIGH; map as cnn_rst = ~s00_axi_aresetn at
+		// block-design integration (not done in this peripheral alone).
+		output wire                              cnn_start,
+		input  wire                              cnn_busy,
+		input  wire                              cnn_done,
+		input  wire [2:0]                        cnn_predicted_class,
+		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_maximum_logit,
+		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_0,
+		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_1,
+		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_2,
+		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_3,
+		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_4,
+		input  wire [63:0]                       cnn_cycle_count,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -45,9 +59,21 @@
 	);
 // Instantiation of Axi Bus Interface S00_AXI
 	cnn_axi_ctrl_slave_lite_v1_0_S00_AXI # ( 
+		.C_CNN_LOGIT_WIDTH(C_CNN_LOGIT_WIDTH),
 		.C_S_AXI_DATA_WIDTH(C_S00_AXI_DATA_WIDTH),
 		.C_S_AXI_ADDR_WIDTH(C_S00_AXI_ADDR_WIDTH)
 	) cnn_axi_ctrl_slave_lite_v1_0_S00_AXI_inst (
+		.cnn_start(cnn_start),
+		.cnn_busy(cnn_busy),
+		.cnn_done(cnn_done),
+		.cnn_predicted_class(cnn_predicted_class),
+		.cnn_maximum_logit(cnn_maximum_logit),
+		.cnn_logit_0(cnn_logit_0),
+		.cnn_logit_1(cnn_logit_1),
+		.cnn_logit_2(cnn_logit_2),
+		.cnn_logit_3(cnn_logit_3),
+		.cnn_logit_4(cnn_logit_4),
+		.cnn_cycle_count(cnn_cycle_count),
 		.S_AXI_ACLK(s00_axi_aclk),
 		.S_AXI_ARESETN(s00_axi_aresetn),
 		.S_AXI_AWADDR(s00_axi_awaddr),

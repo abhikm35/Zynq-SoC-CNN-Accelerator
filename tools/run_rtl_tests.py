@@ -35,7 +35,9 @@ def run(cmd: list[str], *, cwd: Path | None = None) -> None:
     subprocess.run(cmd, cwd=cwd or ROOT, check=True)
 
 
-def verilate_and_run(tb_name: str, sources: list[str]) -> None:
+def verilate_and_run(
+    tb_name: str, sources: list[str], *, timing: bool = False
+) -> None:
     if not shutil.which("verilator"):
         raise RuntimeError("verilator not found on PATH")
 
@@ -64,6 +66,9 @@ def verilate_and_run(tb_name: str, sources: list[str]) -> None:
         "--top-module",
         tb_name,
     ]
+    if timing:
+        # Event-control tasks (@(posedge clk)) need Verilator timing mode.
+        cmd.insert(cmd.index("--cc"), "--timing")
     run(cmd)
 
     make_cmd = [
@@ -444,6 +449,13 @@ ARGMAX_SOURCES = {
     "tb_argmax_random": ["rtl/signed_argmax5.sv"],
 }
 
+AXI_CTRL_SOURCES = {
+    "tb_cnn_axi_ctrl": [
+        "ip_repo/cnn_axi_ctrl_1_0/hdl/cnn_axi_ctrl_slave_lite_v1_0_S00_AXI.v",
+        "ip_repo/cnn_axi_ctrl_1_0/hdl/cnn_axi_ctrl.v",
+    ],
+}
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -471,6 +483,7 @@ def main() -> None:
             "pingpong",
             "shared_conv",
             "shared_pool",
+            "axi",
             "arith",
             "all",
         ],
@@ -674,6 +687,13 @@ def main() -> None:
         verilate_and_run(
             "tb_cnn_shared_compute_end_to_end",
             SHARED_POOL_SOURCES["tb_cnn_shared_compute_end_to_end"],
+        )
+
+    if args.only in ("all", "axi"):
+        verilate_and_run(
+            "tb_cnn_axi_ctrl",
+            AXI_CTRL_SOURCES["tb_cnn_axi_ctrl"],
+            timing=True,
         )
 
     if args.only == "all" and not args.skip_pytest:
