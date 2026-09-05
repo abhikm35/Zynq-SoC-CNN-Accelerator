@@ -126,5 +126,9 @@ Target: INT8 Python == RTL == Arty Z7 FPGA.
 
 ## Next milestones
 
-Assign AXI address → generate BD wrapper → synth/impl @ ~83.333 MHz →
+**If board shows all logits = 0 but cycle_count exact:** see
+`docs/fpga_zero_logits_debug.md` and run `scripts/apply_bd_mem_generics.tcl`
+before rebuilding the bitstream (parameter `$readmemh` paths).
+
+Then: Assign AXI address → generate BD wrapper → synth/impl @ ~83.333 MHz →
 bitstream → XSA → Vitis load golden image and compare.

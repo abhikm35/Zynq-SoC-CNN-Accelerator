@@ -10,10 +10,12 @@
 // does not accept the SystemVerilog file as the reference top
 // (error: top file of type SystemVerilog is not allowed in the reference).
 //
-// Behavior:
-//   - exposes only simple scalar / packed wire ports (no string parameters)
-//   - instantiates cnn_accelerator_synth_wrapper exactly once
-//   - no CNN arithmetic, AXI, sticky-DONE, or START-pulse logic
+// Model .mem paths:
+//   Default relative paths work for RTL sim from the repo root.
+//   For Vivado Block Design synthesis you MUST override these with
+//   absolute forward-slash paths (see scripts/apply_bd_mem_generics.tcl).
+//   Otherwise $readmemh fails silently and ROMs synthesize as zeros →
+//   all logits read back as 0 while cycle_count still matches.
 //
 // Hierarchy:
 //   Block Design -> cnn_accelerator_bd_wrapper.v
@@ -22,7 +24,20 @@
 
 `timescale 1ns / 1ps
 
-module cnn_accelerator_bd_wrapper (
+module cnn_accelerator_bd_wrapper #(
+    parameter CONV1_WGT_MEM   = "vectors/conv1_memory/conv1_weights.mem",
+    parameter CONV1_BIAS_MEM  = "vectors/conv1_memory/conv1_biases.mem",
+    parameter CONV1_MULT_MEM  = "vectors/conv1_memory/conv1_multipliers.mem",
+    parameter CONV1_SHIFT_MEM = "vectors/conv1_memory/conv1_shifts.mem",
+    parameter CONV2_WGT_MEM   = "vectors/conv2/conv2_weights.mem",
+    parameter CONV2_BIAS_MEM  = "vectors/conv2/conv2_biases.mem",
+    parameter CONV2_MULT_MEM  = "vectors/conv2/conv2_multipliers.mem",
+    parameter CONV2_SHIFT_MEM = "vectors/conv2/conv2_shifts.mem",
+    parameter FC_WGT_MEM      = "vectors/fc/fc_weights.mem",
+    parameter FC_BIAS_MEM     = "vectors/fc/fc_biases.mem",
+    parameter FC_MULT_MEM     = "vectors/fc/fc_multipliers.mem",
+    parameter FC_SHIFT_MEM    = "vectors/fc/fc_shifts.mem"
+) (
     (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
     (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_RESET rst, FREQ_HZ 83333336" *)
     input  wire               clk,
@@ -50,9 +65,20 @@ module cnn_accelerator_bd_wrapper (
     input  wire signed [7:0]  input_write_data
 );
 
-    // Use synth-wrapper default parameters (LOGIT_WIDTH, *.mem paths).
-    // Do not expose model-memory path parameters on the BD boundary.
-    cnn_accelerator_synth_wrapper u_cnn (
+    cnn_accelerator_synth_wrapper #(
+        .CONV1_WGT_MEM(CONV1_WGT_MEM),
+        .CONV1_BIAS_MEM(CONV1_BIAS_MEM),
+        .CONV1_MULT_MEM(CONV1_MULT_MEM),
+        .CONV1_SHIFT_MEM(CONV1_SHIFT_MEM),
+        .CONV2_WGT_MEM(CONV2_WGT_MEM),
+        .CONV2_BIAS_MEM(CONV2_BIAS_MEM),
+        .CONV2_MULT_MEM(CONV2_MULT_MEM),
+        .CONV2_SHIFT_MEM(CONV2_SHIFT_MEM),
+        .FC_WGT_MEM(FC_WGT_MEM),
+        .FC_BIAS_MEM(FC_BIAS_MEM),
+        .FC_MULT_MEM(FC_MULT_MEM),
+        .FC_SHIFT_MEM(FC_SHIFT_MEM)
+    ) u_cnn (
         .clk(clk),
         .rst(rst),
         .start(start),
