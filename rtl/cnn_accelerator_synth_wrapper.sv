@@ -13,7 +13,7 @@
 //
 // NOTE: This module has string file-path parameters. Vivado IP Integrator
 // Module Reference typically treats that as incompatible. For Block Design,
-// use cnn_accelerator_bd_wrapper (no string parameters on its boundary).
+// use rtl/cnn_accelerator_bd_wrapper.v (plain Verilog; no string params).
 
 `timescale 1ns / 1ps
 

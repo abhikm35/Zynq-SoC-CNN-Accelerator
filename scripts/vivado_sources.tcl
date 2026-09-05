@@ -67,7 +67,7 @@ set cnn_rtl_sources [list \
     [cnn_repo_path rtl cnn_top_controller.sv] \
     [cnn_repo_path rtl cnn_accelerator_shared_compute_top.sv] \
     [cnn_repo_path rtl cnn_accelerator_synth_wrapper.sv] \
-    [cnn_repo_path rtl cnn_accelerator_bd_wrapper.sv] \
+    [cnn_repo_path rtl cnn_accelerator_bd_wrapper.v] \
 ]
 
 # ---------------------------------------------------------------------------

@@ -46,11 +46,12 @@ cnn_accelerator_synth_wrapper
 For **IP Integrator / Block Design Module Reference**, use instead:
 
 ```text
-cnn_accelerator_bd_wrapper
+cnn_accelerator_bd_wrapper   (file: rtl/cnn_accelerator_bd_wrapper.v)
 ```
 
-See `docs/cnn_bd_wrapper.md` (string parameters on the synth wrapper make it
-“incompatible” with Add Module when hide-incompatible is enabled).
+See `docs/cnn_bd_wrapper.md`. The synth wrapper is incompatible mainly due to
+string `.mem` path parameters; the BD-facing top is plain Verilog-2001 so Add
+Module works with hide-incompatible enabled.
 
 This is a **tiny pinout wrapper** around the verified
 `cnn_accelerator_shared_compute_top`. The full top exposes hundreds of

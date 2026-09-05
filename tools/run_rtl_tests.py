@@ -478,7 +478,7 @@ BD_WRAPPER_CORE = SHARED_CONV_CORE + [
     "rtl/cnn_top_controller.sv",
     "rtl/cnn_accelerator_shared_compute_top.sv",
     "rtl/cnn_accelerator_synth_wrapper.sv",
-    "rtl/cnn_accelerator_bd_wrapper.sv",
+    "rtl/cnn_accelerator_bd_wrapper.v",
 ]
 
 BD_WRAPPER_SOURCES = {

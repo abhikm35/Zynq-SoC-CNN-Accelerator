@@ -1,5 +1,5 @@
 // tb_cnn_bd_wrapper_elab.sv
-// Compile/elaboration smoke test for cnn_accelerator_bd_wrapper.
+// Compile/elaboration smoke test for cnn_accelerator_bd_wrapper.v
 // Does not run a full inference.
 
 `timescale 1ns / 1ps

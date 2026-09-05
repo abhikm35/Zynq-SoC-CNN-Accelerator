@@ -10,21 +10,30 @@ Integrator Module Reference cannot map string generics cleanly.
 Secondary factors:
 
 - Parameter-dependent port width: `signed [LOGIT_WIDTH-1:0]`
-- Not because of unpacked logit arrays (that wrapper never had those)
+- SystemVerilog top-level Module Reference is less reliable than plain Verilog
 
-## Use this instead in the Block Design
+## Why the BD wrapper is now `.v`
+
+An earlier SystemVerilog shell (`cnn_accelerator_bd_wrapper.sv`) still did not
+appear under Add Module with hide-incompatible enabled on Windows Vivado.
+
+The active BD-facing top is therefore **plain Verilog-2001**:
+
+```text
+rtl/cnn_accelerator_bd_wrapper.v
+```
+
+Use this module name in the Block Design:
 
 ```text
 cnn_accelerator_bd_wrapper
 ```
 
-File: `rtl/cnn_accelerator_bd_wrapper.sv`
-
 Hierarchy:
 
 ```text
 Block Design
-  └── cnn_accelerator_bd_wrapper     ← Add Module (compatible)
+  └── cnn_accelerator_bd_wrapper.v   ← Add Module (compatible)
         └── cnn_accelerator_synth_wrapper
               └── cnn_accelerator_shared_compute_top
 ```
@@ -33,6 +42,14 @@ The BD wrapper has **no string parameters** on its boundary. Memory paths stay
 inside the synth wrapper defaults.
 
 Do **not** Add Module `cnn_accelerator_synth_wrapper` directly.
+
+The old `.sv` BD wrapper is archived (renamed module) at:
+
+```text
+rtl/legacy/cnn_accelerator_bd_wrapper.sv.archived
+```
+
+Do **not** add that file to Design Sources.
 
 ## External ports (BD-facing)
 
@@ -53,23 +70,40 @@ Do **not** Add Module `cnn_accelerator_synth_wrapper` directly.
 
 No AXI inside this wrapper. Sticky DONE / START pulse live in `cnn_axi_ctrl`.
 
+## Expected Block Design wiring
+
+```text
+cnn_axi_ctrl.cnn_start              -> cnn_accelerator_bd_wrapper.start
+cnn_accelerator_bd_wrapper.busy     -> cnn_axi_ctrl.cnn_busy
+cnn_accelerator_bd_wrapper.done     -> cnn_axi_ctrl.cnn_done
+cnn_accelerator_bd_wrapper.predicted_class -> cnn_axi_ctrl.cnn_predicted_class
+cnn_accelerator_bd_wrapper.maximum_logit   -> cnn_axi_ctrl.cnn_maximum_logit
+cnn_accelerator_bd_wrapper.logit_0..4      -> cnn_axi_ctrl.cnn_logit_0..4
+cnn_accelerator_bd_wrapper.cycle_count     -> cnn_axi_ctrl.cnn_cycle_count
+```
+
+PL clock → `clk`. CNN `rst` is **active-high**; if the PS/proc_sys_reset net is
+active-low, invert once in the BD.
+
+Leave `input_write_*` unconnected or tied off until the Activation RAM milestone.
+
 ## Windows steps after `git pull`
 
-1. Open the main Vivado project (recreate if sources are stale).
-2. Confirm `cnn_accelerator_bd_wrapper.sv` is under Design Sources
+1. `git pull` on Windows.
+2. Open the existing main Vivado project (or recreate from repo scripts if sources are stale).
+3. Confirm **`cnn_accelerator_bd_wrapper.v`** is under Design Sources
    (`scripts/vivado_sources.tcl` lists it).
-3. Open the Block Design (e.g. `zynq_cnn_system`).
-4. Right-click canvas → **Add Module…**
-5. Keep **Hide incompatible modules** **CHECKED**.
-6. Select **`cnn_accelerator_bd_wrapper`** (not the synth wrapper).
-7. Connect:
-   - `cnn_axi_ctrl.cnn_start` → `bd_wrapper.start`
-   - `bd_wrapper.busy/done/predicted_class/maximum_logit/logit_*/cycle_count`
-     → matching `cnn_axi_ctrl` CNN-side inputs
-   - PL clock/reset → `clk` / `rst` (remember CNN `rst` is active-high;
-     if PS reset is active-low, invert once in the BD)
-8. Leave `input_write_*` unconnected or tied off until the Activation RAM
-   milestone (or drive from a test source).
+4. Confirm the archived
+   `rtl/legacy/cnn_accelerator_bd_wrapper.sv.archived`
+   is **not** in Design Sources (no duplicate `cnn_accelerator_bd_wrapper`).
+5. **Update Compile Order** (Sources → Compile Order → Update).
+6. Open `zynq_cnn_system` (or your Block Design).
+7. Right-click empty canvas → **Add Module…**
+8. Leave **Hide incompatible modules** **CHECKED**.
+9. Verify **`cnn_accelerator_bd_wrapper`** appears.
+10. Add it.
+11. Do **not** add `cnn_accelerator_synth_wrapper` directly.
+12. Connect `cnn_axi_ctrl` ↔ CNN wrapper as in the wiring table above.
 
 ## Related docs
 

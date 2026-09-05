@@ -1,12 +1,11 @@
-// cnn_accelerator_bd_wrapper.sv
-// Block Design / Module Reference-compatible shell around the timing-closed
-// cnn_accelerator_synth_wrapper.
+// cnn_accelerator_bd_wrapper.v
+// Plain Verilog-2001 Block Design / Module Reference shell around the
+// timing-closed cnn_accelerator_synth_wrapper.
 //
-// Why this exists:
-//   Vivado IP Integrator "Add Module" hides cnn_accelerator_synth_wrapper when
-//   "Hide incompatible modules" is checked, primarily because that module
-//   declares many **string file-path parameters** (weight/bias .mem paths) and
-//   a parameter-dependent port width. Module Reference cannot map those cleanly.
+// Why this file is .v (not .sv):
+//   Vivado IP Integrator "Add Module" can still hide SystemVerilog Module
+//   References even when ports are simple. A Verilog-2001 top with only
+//   scalar/packed wire ports is the most compatible BD-facing boundary.
 //
 // This wrapper:
 //   - exposes only simple scalar / packed ports (no string parameters)
@@ -48,6 +47,7 @@ module cnn_accelerator_bd_wrapper (
 );
 
     // Memory paths stay inside the hierarchy (not on the BD boundary).
+    // Named parameter override is Verilog-2001; child remains SystemVerilog.
     cnn_accelerator_synth_wrapper #(
         .LOGIT_WIDTH(32)
     ) u_synth (
