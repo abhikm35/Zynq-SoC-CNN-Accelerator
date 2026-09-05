@@ -9,10 +9,11 @@
 #   - Zynq PS FCLK (programmable)
 # are different architectures. Do not confuse them.
 #
-# The create_clock below is a PROVISIONAL 100 MHz constraint on the RTL `clk`
-# port so standalone synthesis/implementation can produce timing reports.
-# When the accelerator is connected to a PS FCLK (or another PL clock),
-# revise or replace this constraint to match the actual clock source and period.
+# The create_clock below is a PROVISIONAL characterization constraint on the
+# RTL `clk` port (~83.3 MHz / 12 ns). After pipelining requantize, the design
+# was ~1 ns short of 100 MHz (WNS ≈ -0.95 ns at 10 ns); 12 ns closes timing
+# with margin for standalone reports. When connected to a PS FCLK (or another
+# PL clock), revise or replace this to match the real source and period.
 #
 # Pins are intentionally unconstrained (no PACKAGE_PIN). Vivado will
 # auto-assign IOs for resource/timing characterization only. Add real
@@ -21,7 +22,7 @@
 ## -----------------------------------------------------------------------------
 ## Provisional PL clock (standalone characterization only)
 ## -----------------------------------------------------------------------------
-create_clock -period 10.000 -name cnn_clk -waveform {0.000 5.000} [get_ports clk]
+create_clock -period 12.000 -name cnn_clk -waveform {0.000 6.000} [get_ports clk]
 
 ## -----------------------------------------------------------------------------
 ## TODO (Zynq PS integration — not done in this milestone)
