@@ -24,7 +24,7 @@
 
 module cnn_accelerator_bd_wrapper (
     (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
-    (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_RESET rst, FREQ_HZ 83333333" *)
+    (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_RESET rst, FREQ_HZ 83333336" *)
     input  wire               clk,
 
     (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst RST" *)
