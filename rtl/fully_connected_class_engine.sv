@@ -4,14 +4,14 @@
 // FSM (1-cycle sync memories):
 //   IDLE -> ISSUE_BIAS -> WAIT_BIAS -> LOAD_BIAS
 //       -> ISSUE_OP -> WAIT_MAC  (x32)
-//       -> REQ_MUL -> REQ_OUT -> DONE
+//       -> REQ_MUL -> REQ_SHIFT -> REQ_OUT -> DONE
 //
 // Arithmetic (Python integer_linear + requantize_int32):
 //   acc = bias + Σ gap[i] * weight[class][i]   // ZP = 0
 //   logit = saturate_int32(round(acc * mult / 2^shift))
 // No ReLU on logits.
 //
-// Timing: 64-bit multiply and round/shift/sat are separate cycles.
+// Timing: 64-bit multiply, round/shift, and INT32 sat are separate cycles.
 // Reuses int8_mac. External memories.
 
 `timescale 1ns / 1ps
@@ -69,8 +69,9 @@ module fully_connected_class_engine #(
     localparam logic [3:0] ST_ISSUE_OP   = 4'd4;
     localparam logic [3:0] ST_WAIT_MAC   = 4'd5;
     localparam logic [3:0] ST_REQ_MUL    = 4'd6;
-    localparam logic [3:0] ST_REQ_OUT    = 4'd7;
-    localparam logic [3:0] ST_DONE       = 4'd8;
+    localparam logic [3:0] ST_REQ_SHIFT  = 4'd7;
+    localparam logic [3:0] ST_REQ_OUT    = 4'd8;
+    localparam logic [3:0] ST_DONE       = 4'd9;
 
     logic [3:0] state;
     logic [3:0] state_n;
@@ -86,6 +87,7 @@ module fully_connected_class_engine #(
     logic signed [31:0] final_acc_r;
     logic signed [31:0] logit_r;
     logic signed [63:0] wide_product_r;
+    logic signed [63:0] shifted_value_r;
 
     logic load_bias_i;
     logic mac_en;
@@ -133,21 +135,24 @@ module fully_connected_class_engine #(
         .accumulator (acc_w)
     );
 
-    // Pipeline: ST_REQ_MUL registers the 64-bit product;
-    // ST_REQ_OUT registers the INT32 logit from the registered product.
+    // Pipeline: product -> round/shift -> INT32 saturate.
     always_comb begin
         wide_w = {{32{acc_w[31]}}, acc_w} * {{32{mult_r[31]}}, mult_r};
     end
 
-    fc_logit_from_product u_post (
-        .wide_product        (wide_product_r),
-        .shift               (shift_r),
+    rounding_right_shift64 u_shift (
+        .wide_product    (wide_product_r),
+        .shift           (shift_r),
+        .rounding_offset (roff_w),
+        .rounded_product (rprod_w),
+        .shifted_value   (shifted_w)
+    );
+
+    saturate_shifted_int32 u_sat (
+        .shifted_value       (shifted_value_r),
         .output_zero_point   (8'sd0),
-        .rounding_offset     (roff_w),
-        .rounded_product     (rprod_w),
-        .shifted_value       (shifted_w),
         .zero_point_adjusted (zpadj_w),
-        .logit_value         (logit_w)
+        .saturated_value     (logit_w)
     );
 
     assign gap_read_address    = gap_addr_w;
@@ -183,6 +188,7 @@ module fully_connected_class_engine #(
             final_acc_r <= 32'sd0;
             logit_r <= 32'sd0;
             wide_product_r <= 64'sd0;
+            shifted_value_r <= 64'sd0;
             busy <= 1'b0;
             done <= 1'b0;
         end else begin
@@ -212,6 +218,9 @@ module fully_connected_class_engine #(
                 ST_REQ_MUL: begin
                     final_acc_r    <= acc_w;
                     wide_product_r <= wide_w;
+                end
+                ST_REQ_SHIFT: begin
+                    shifted_value_r <= shifted_w;
                 end
                 ST_REQ_OUT: begin
                     logit_r <= logit_w;
@@ -256,6 +265,9 @@ module fully_connected_class_engine #(
                     state_n = ST_ISSUE_OP;
             end
             ST_REQ_MUL: begin
+                state_n = ST_REQ_SHIFT;
+            end
+            ST_REQ_SHIFT: begin
                 state_n = ST_REQ_OUT;
             end
             ST_REQ_OUT: begin

@@ -3,13 +3,13 @@
 //
 // Per channel:
 //   CLEAR_SUM -> (ISSUE -> WAIT -> ACCUMULATE) x64
-//   -> AVERAGE -> REQ_MUL -> REQ_OUT -> WRITE -> ADVANCE
+//   -> AVERAGE -> REQ_MUL -> REQ_SHIFT -> REQ_OUT -> WRITE -> ADVANCE
 //
 // Exact Python path (integer_inference.py):
 //   avg = saturate(round_divide_int(sum, 64))          // ties away from zero
 //   gap = requantize_int32(avg, gap_mult, gap_shift)    // shared per-tensor
 //
-// Timing: average, 64-bit multiply, and round/shift/sat are separate cycles
+// Timing: average, 64-bit multiply, round/shift, and sat are separate cycles
 // so each stage can close at ~100 MHz.
 //
 // Sync Pool2 memory: ISSUE -> WAIT -> ACCUMULATE (1-cycle read latency).
@@ -59,10 +59,11 @@ module global_average_pool_controller #(
     localparam logic [3:0] ST_ACCUMULATE = 4'd4;
     localparam logic [3:0] ST_AVERAGE    = 4'd5;
     localparam logic [3:0] ST_REQ_MUL    = 4'd6;
-    localparam logic [3:0] ST_REQ_OUT    = 4'd7;
-    localparam logic [3:0] ST_WRITE      = 4'd8;
-    localparam logic [3:0] ST_ADVANCE    = 4'd9;
-    localparam logic [3:0] ST_DONE       = 4'd10;
+    localparam logic [3:0] ST_REQ_SHIFT  = 4'd7;
+    localparam logic [3:0] ST_REQ_OUT    = 4'd8;
+    localparam logic [3:0] ST_WRITE      = 4'd9;
+    localparam logic [3:0] ST_ADVANCE    = 4'd10;
+    localparam logic [3:0] ST_DONE       = 4'd11;
 
     logic [3:0] state;
     logic [3:0] state_n;
@@ -76,6 +77,7 @@ module global_average_pool_controller #(
     logic signed [7:0] avg_r;
     logic signed [7:0] gap_r;
     logic signed [63:0] wide_product_r;
+    logic signed [63:0] shifted_value_r;
 
     logic signed [7:0] avg_w;
     logic signed [31:0] rounding_adjustment_w;
@@ -124,14 +126,19 @@ module global_average_pool_controller #(
                        * {{32{GAP_MULTIPLIER[31]}}, GAP_MULTIPLIER};
     end
 
-    // Round/shift/sat from registered product (ST_REQ_OUT samples gap_sat_w).
-    requantize_from_product u_req_post (
-        .wide_product        (wide_product_r),
-        .shift               (GAP_SHIFT),
+    // Round/shift from registered product (ST_REQ_SHIFT samples shifted_req_w).
+    rounding_right_shift64 u_req_shift (
+        .wide_product    (wide_product_r),
+        .shift           (GAP_SHIFT),
+        .rounding_offset (rounding_offset_w),
+        .rounded_product (rounded_product_w),
+        .shifted_value   (shifted_req_w)
+    );
+
+    // Saturate from registered shifted value (ST_REQ_OUT samples gap_sat_w).
+    saturate_shifted_int8 u_req_sat (
+        .shifted_value       (shifted_value_r),
         .output_zero_point   (8'sd0),
-        .rounding_offset     (rounding_offset_w),
-        .rounded_product     (rounded_product_w),
-        .shifted_value       (shifted_req_w),
         .zero_point_adjusted (zp_adj_w),
         .saturated_value     (gap_sat_w)
     );
@@ -166,6 +173,7 @@ module global_average_pool_controller #(
             avg_r <= 8'sd0;
             gap_r <= 8'sd0;
             wide_product_r <= 64'sd0;
+            shifted_value_r <= 64'sd0;
             busy <= 1'b0;
             gap_done <= 1'b0;
         end else begin
@@ -186,6 +194,7 @@ module global_average_pool_controller #(
                         avg_r <= 8'sd0;
                         gap_r <= 8'sd0;
                         wide_product_r <= 64'sd0;
+                        shifted_value_r <= 64'sd0;
                     end
                 end
                 ST_CLEAR_SUM: begin
@@ -206,6 +215,9 @@ module global_average_pool_controller #(
                 end
                 ST_REQ_MUL: begin
                     wide_product_r <= wide_product_w;
+                end
+                ST_REQ_SHIFT: begin
+                    shifted_value_r <= shifted_req_w;
                 end
                 ST_REQ_OUT: begin
                     gap_r <= gap_sat_w;
@@ -252,6 +264,9 @@ module global_average_pool_controller #(
                 state_n = ST_REQ_MUL;
             end
             ST_REQ_MUL: begin
+                state_n = ST_REQ_SHIFT;
+            end
+            ST_REQ_SHIFT: begin
                 state_n = ST_REQ_OUT;
             end
             ST_REQ_OUT: begin

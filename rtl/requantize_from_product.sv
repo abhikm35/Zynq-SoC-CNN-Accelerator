@@ -1,7 +1,7 @@
 // requantize_from_product.sv
 // Second half of requantize_int32: round / shift / zero-point / saturate.
-// Used to pipeline the 64-bit multiply away from this fabric logic.
-// Bit-exact with the post-multiply path in requantize.sv.
+// Combinational wrapper for unit tests; pipeline with
+// rounding_right_shift64 then saturate_shifted_int8 in the FSMs.
 
 `timescale 1ns / 1ps
 
@@ -17,38 +17,19 @@ module requantize_from_product (
     output logic signed [7:0]       saturated_value
 );
 
-    logic signed [63:0] neg_wide;
-    logic signed [63:0] tmp;
+    rounding_right_shift64 u_shift (
+        .wide_product    (wide_product),
+        .shift           (shift),
+        .rounding_offset (rounding_offset),
+        .rounded_product (rounded_product),
+        .shifted_value   (shifted_value)
+    );
 
-    always_comb begin
-        neg_wide = 64'sd0;
-        tmp = 64'sd0;
-
-        if (shift == 6'd0) begin
-            rounding_offset = 64'sd0;
-            rounded_product = wide_product;
-            shifted_value   = wide_product;
-        end else begin
-            rounding_offset = 64'sd1 <<< (shift - 6'd1);
-            if (wide_product >= 64'sd0) begin
-                rounded_product = wide_product + rounding_offset;
-                shifted_value   = rounded_product >>> shift;
-            end else begin
-                neg_wide = -wide_product;
-                tmp = neg_wide + rounding_offset;
-                rounded_product = -(tmp);
-                shifted_value   = -(tmp >>> shift);
-            end
-        end
-
-        zero_point_adjusted = shifted_value[31:0] + {{24{output_zero_point[7]}}, output_zero_point};
-
-        if (zero_point_adjusted > 32'sd127)
-            saturated_value = 8'sd127;
-        else if (zero_point_adjusted < -32'sd128)
-            saturated_value = -8'sd128;
-        else
-            saturated_value = zero_point_adjusted[7:0];
-    end
+    saturate_shifted_int8 u_sat (
+        .shifted_value       (shifted_value),
+        .output_zero_point   (output_zero_point),
+        .zero_point_adjusted (zero_point_adjusted),
+        .saturated_value     (saturated_value)
+    );
 
 endmodule

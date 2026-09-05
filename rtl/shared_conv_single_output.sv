@@ -8,11 +8,11 @@
 // Same FSM as the verified Conv1/Conv2 single-output engines:
 //   IDLE -> ISSUE_BIAS -> WAIT_BIAS -> LOAD_BIAS
 //       -> ISSUE_OP -> WAIT_MAC  (x MACs_PER_OUTPUT)
-//       -> REQ_MUL -> REQ_OUT -> DONE
+//       -> REQ_MUL -> REQ_SHIFT -> REQ_OUT -> DONE
 //
 // Activations are always EXTERNAL (1-cycle sync). Weight/bias/mult/shift
 // come from layer-selected ROMs instantiated here (separate banks).
-// Requantize is pipelined: register 64-bit product, then round/shift/sat/ReLU.
+// Requantize is pipelined: product, then round/shift, then sat/ReLU.
 
 `timescale 1ns / 1ps
 
@@ -72,8 +72,9 @@ module shared_conv_single_output #(
     localparam logic [3:0] ST_ISSUE_OP   = 4'd4;
     localparam logic [3:0] ST_WAIT_MAC   = 4'd5;
     localparam logic [3:0] ST_REQ_MUL    = 4'd6;
-    localparam logic [3:0] ST_REQ_OUT    = 4'd7;
-    localparam logic [3:0] ST_DONE       = 4'd8;
+    localparam logic [3:0] ST_REQ_SHIFT  = 4'd7;
+    localparam logic [3:0] ST_REQ_OUT    = 4'd8;
+    localparam logic [3:0] ST_DONE       = 4'd9;
 
     logic [3:0] state, state_n;
 
@@ -106,7 +107,7 @@ module shared_conv_single_output #(
     logic signed [31:0] acc_w;
 
     logic signed [63:0] wide_product_w, wide_product_r;
-    logic signed [63:0] rounding_offset, rounded_product, shifted_value;
+    logic signed [63:0] rounding_offset, rounded_product, shifted_value_w, shifted_value_r;
     logic signed [31:0] zero_point_adjusted;
     logic signed [7:0] sat_value, relu_value;
 
@@ -204,20 +205,26 @@ module shared_conv_single_output #(
         .product(prod_w), .accumulator(acc_w)
     );
 
-    // Pipeline requantize: ST_REQ_MUL registers the 64-bit product;
-    // ST_REQ_OUT registers saturate + ReLU from the registered product.
+    // Pipeline requantize across three cycles:
+    //   ST_REQ_MUL   : register 64-bit product
+    //   ST_REQ_SHIFT : register round/shift result
+    //   ST_REQ_OUT   : register saturate + ReLU
     always_comb begin
         wide_product_w = {{32{acc_w[31]}}, acc_w}
                        * {{32{multiplier_r[31]}}, multiplier_r};
     end
 
-    requantize_from_product u_req_post (
-        .wide_product        (wide_product_r),
-        .shift               (shift_r),
+    rounding_right_shift64 u_req_shift (
+        .wide_product    (wide_product_r),
+        .shift           (shift_r),
+        .rounding_offset (rounding_offset),
+        .rounded_product (rounded_product),
+        .shifted_value   (shifted_value_w)
+    );
+
+    saturate_shifted_int8 u_req_sat (
+        .shifted_value       (shifted_value_r),
         .output_zero_point   (8'sd0),
-        .rounding_offset     (rounding_offset),
-        .rounded_product     (rounded_product),
-        .shifted_value       (shifted_value),
         .zero_point_adjusted (zero_point_adjusted),
         .saturated_value     (sat_value)
     );
@@ -261,6 +268,7 @@ module shared_conv_single_output #(
             final_accumulator <= 32'sd0;
             requantized_output <= 8'sd0; relu_output <= 8'sd0;
             wide_product_r <= 64'sd0;
+            shifted_value_r <= 64'sd0;
             last_product <= 16'sd0;
             done <= 1'b0; busy <= 1'b0;
         end else begin
@@ -314,6 +322,9 @@ module shared_conv_single_output #(
                     final_accumulator <= acc_w;
                     wide_product_r    <= wide_product_w;
                 end
+                ST_REQ_SHIFT: begin
+                    shifted_value_r <= shifted_value_w;
+                end
                 ST_REQ_OUT: begin
                     requantized_output <= sat_value;
                     relu_output        <= relu_value;
@@ -352,7 +363,8 @@ module shared_conv_single_output #(
                 mac_en = 1'b1;
                 state_n = last_mac ? ST_REQ_MUL : ST_ISSUE_OP;
             end
-            ST_REQ_MUL: state_n = ST_REQ_OUT;
+            ST_REQ_MUL: state_n = ST_REQ_SHIFT;
+            ST_REQ_SHIFT: state_n = ST_REQ_OUT;
             ST_REQ_OUT: state_n = ST_DONE;
             ST_DONE: state_n = ST_IDLE;
             default: state_n = ST_IDLE;
