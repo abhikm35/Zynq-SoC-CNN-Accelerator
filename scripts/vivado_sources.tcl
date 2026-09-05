@@ -56,6 +56,7 @@ set cnn_rtl_sources [list \
     [cnn_repo_path rtl gap_average.sv] \
     [cnn_repo_path rtl global_average_pool_controller.sv] \
     [cnn_repo_path rtl fc_address_generator.sv] \
+    [cnn_repo_path rtl fc_logit_from_product.sv] \
     [cnn_repo_path rtl fc_output_postprocess.sv] \
     [cnn_repo_path rtl fully_connected_class_engine.sv] \
     [cnn_repo_path rtl fully_connected_layer_controller.sv] \

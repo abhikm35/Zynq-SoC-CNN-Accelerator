@@ -4,6 +4,8 @@
 //
 //   logit = saturate_int32(round(acc * multiplier / 2^shift) + zp)
 //
+// Combinational for unit testing; pipeline externally for timing
+// (register wide_product, then fc_logit_from_product).
 // No ReLU — classifier logits may be negative.
 // No floating-point.
 
@@ -25,42 +27,22 @@ module fc_output_postprocess (
 
     logic signed [63:0] acc_sext;
     logic signed [63:0] mult_sext;
-    logic signed [63:0] neg_wide;
-    logic signed [63:0] tmp;
-    logic signed [63:0] with_zp;
 
     always_comb begin
         acc_sext  = {{32{accumulator[31]}}, accumulator};
         mult_sext = {{32{multiplier[31]}}, multiplier};
         wide_product = acc_sext * mult_sext;
-
-        if (shift == 6'd0) begin
-            rounding_offset = 64'sd0;
-            rounded_product = wide_product;
-            shifted_value   = wide_product;
-        end else begin
-            rounding_offset = 64'sd1 <<< (shift - 6'd1);
-            if (wide_product >= 64'sd0) begin
-                rounded_product = wide_product + rounding_offset;
-                shifted_value   = rounded_product >>> shift;
-            end else begin
-                neg_wide = -wide_product;
-                tmp = neg_wide + rounding_offset;
-                rounded_product = -(tmp);
-                shifted_value   = -(tmp >>> shift);
-            end
-        end
-
-        with_zp = shifted_value + {{56{output_zero_point[7]}}, output_zero_point};
-        zero_point_adjusted = with_zp[31:0];
-
-        // Saturate to signed INT32 full range (matches Python classifier scores).
-        if (with_zp > 64'sd2147483647)
-            logit_value = 32'sd2147483647;
-        else if (with_zp < -64'sd2147483648)
-            logit_value = -32'sd2147483648;
-        else
-            logit_value = with_zp[31:0];
     end
+
+    fc_logit_from_product u_post (
+        .wide_product        (wide_product),
+        .shift               (shift),
+        .output_zero_point   (output_zero_point),
+        .rounding_offset     (rounding_offset),
+        .rounded_product     (rounded_product),
+        .shifted_value       (shifted_value),
+        .zero_point_adjusted (zero_point_adjusted),
+        .logit_value         (logit_value)
+    );
 
 endmodule

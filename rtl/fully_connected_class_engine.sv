@@ -4,14 +4,15 @@
 // FSM (1-cycle sync memories):
 //   IDLE -> ISSUE_BIAS -> WAIT_BIAS -> LOAD_BIAS
 //       -> ISSUE_OP -> WAIT_MAC  (x32)
-//       -> POST_PROCESS -> DONE
+//       -> REQ_MUL -> REQ_OUT -> DONE
 //
 // Arithmetic (Python integer_linear + requantize_int32):
 //   acc = bias + Σ gap[i] * weight[class][i]   // ZP = 0
 //   logit = saturate_int32(round(acc * mult / 2^shift))
 // No ReLU on logits.
 //
-// Reuses int8_mac and fc_output_postprocess. External memories.
+// Timing: 64-bit multiply and round/shift/sat are separate cycles.
+// Reuses int8_mac. External memories.
 
 `timescale 1ns / 1ps
 
@@ -61,14 +62,15 @@ module fully_connected_class_engine #(
     localparam logic [4:0] LAST_INPUT = 5'(NUM_FEATURES - 1);
     localparam logic [5:0] MACS_PER_CLASS = 6'(NUM_FEATURES);
 
-    localparam logic [3:0] ST_IDLE         = 4'd0;
-    localparam logic [3:0] ST_ISSUE_BIAS   = 4'd1;
-    localparam logic [3:0] ST_WAIT_BIAS    = 4'd2;
-    localparam logic [3:0] ST_LOAD_BIAS    = 4'd3;
-    localparam logic [3:0] ST_ISSUE_OP     = 4'd4;
-    localparam logic [3:0] ST_WAIT_MAC     = 4'd5;
-    localparam logic [3:0] ST_POST_PROCESS = 4'd6;
-    localparam logic [3:0] ST_DONE         = 4'd7;
+    localparam logic [3:0] ST_IDLE       = 4'd0;
+    localparam logic [3:0] ST_ISSUE_BIAS = 4'd1;
+    localparam logic [3:0] ST_WAIT_BIAS  = 4'd2;
+    localparam logic [3:0] ST_LOAD_BIAS  = 4'd3;
+    localparam logic [3:0] ST_ISSUE_OP   = 4'd4;
+    localparam logic [3:0] ST_WAIT_MAC   = 4'd5;
+    localparam logic [3:0] ST_REQ_MUL    = 4'd6;
+    localparam logic [3:0] ST_REQ_OUT    = 4'd7;
+    localparam logic [3:0] ST_DONE       = 4'd8;
 
     logic [3:0] state;
     logic [3:0] state_n;
@@ -83,6 +85,7 @@ module fully_connected_class_engine #(
 
     logic signed [31:0] final_acc_r;
     logic signed [31:0] logit_r;
+    logic signed [63:0] wide_product_r;
 
     logic load_bias_i;
     logic mac_en;
@@ -130,12 +133,16 @@ module fully_connected_class_engine #(
         .accumulator (acc_w)
     );
 
-    fc_output_postprocess u_post (
-        .accumulator         (acc_w),
-        .multiplier          (mult_r),
+    // Pipeline: ST_REQ_MUL registers the 64-bit product;
+    // ST_REQ_OUT registers the INT32 logit from the registered product.
+    always_comb begin
+        wide_w = {{32{acc_w[31]}}, acc_w} * {{32{mult_r[31]}}, mult_r};
+    end
+
+    fc_logit_from_product u_post (
+        .wide_product        (wide_product_r),
         .shift               (shift_r),
         .output_zero_point   (8'sd0),
-        .wide_product        (wide_w),
         .rounding_offset     (roff_w),
         .rounded_product     (rprod_w),
         .shifted_value       (shifted_w),
@@ -175,6 +182,7 @@ module fully_connected_class_engine #(
             shift_r <= 6'd0;
             final_acc_r <= 32'sd0;
             logit_r <= 32'sd0;
+            wide_product_r <= 64'sd0;
             busy <= 1'b0;
             done <= 1'b0;
         end else begin
@@ -201,9 +209,12 @@ module fully_connected_class_engine #(
                     if (!last_input)
                         input_r <= input_r + 5'd1;
                 end
-                ST_POST_PROCESS: begin
-                    final_acc_r <= acc_w;
-                    logit_r     <= logit_w;
+                ST_REQ_MUL: begin
+                    final_acc_r    <= acc_w;
+                    wide_product_r <= wide_w;
+                end
+                ST_REQ_OUT: begin
+                    logit_r <= logit_w;
                 end
                 ST_DONE: begin
                     done <= 1'b1;
@@ -240,11 +251,14 @@ module fully_connected_class_engine #(
             ST_WAIT_MAC: begin
                 mac_en = 1'b1;
                 if (last_input)
-                    state_n = ST_POST_PROCESS;
+                    state_n = ST_REQ_MUL;
                 else
                     state_n = ST_ISSUE_OP;
             end
-            ST_POST_PROCESS: begin
+            ST_REQ_MUL: begin
+                state_n = ST_REQ_OUT;
+            end
+            ST_REQ_OUT: begin
                 state_n = ST_DONE;
             end
             ST_DONE: begin
