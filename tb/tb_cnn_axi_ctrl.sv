@@ -218,11 +218,18 @@ module tb_cnn_axi_ctrl (
         end
     end
 
-    task automatic do_input_write(input logic [11:0] addr, input logic [7:0] data);
+    task automatic pack_input(input logic [11:0] addr, input logic [7:0] data,
+                              output logic [31:0] word);
         begin
-            axi_write(6'h30, {20'h0, addr}, 4'hF);
-            axi_write(6'h34, {24'h0, data}, 4'hF);
-            axi_write(6'h38, 32'h0000_0001, 4'hF);
+            word = {12'h0, data, addr};
+        end
+    endtask
+
+    task automatic do_input_write(input logic [11:0] addr, input logic [7:0] data);
+        logic [31:0] word;
+        begin
+            pack_input(addr, data, word);
+            axi_write(6'h2C, word, 4'hF);
             repeat (4) @(posedge clk);
         end
     endtask
@@ -392,91 +399,59 @@ module tb_cnn_axi_ctrl (
         axi_read(6'h14, rd); expect_eq("RO write ignored LOGIT_1", rd, 32'hFFFF_FFFF);
         axi_read(6'h24, rd); expect_eq("RO write ignored CYCLE_L", rd, 32'h1234_5678);
 
-        // ---- Reserved 0x2C ----
-        axi_read(6'h2C, rd); expect_eq("RESERVED 0x2C", rd, 32'h0);
-        axi_write(6'h2C, 32'hCAFE_BABE, 4'hF);
-        axi_read(6'h2C, rd); expect_eq("RESERVED after write", rd, 32'h0);
+        // ---- INPUT_WRITE @ 0x2C (was RESERVED) ----
+        axi_read(6'h2C, rd); expect_eq("INPUT_WRITE readback", rd, 32'h0);
 
         // ============================================================
-        // INPUT loader (0x30 / 0x34 / 0x38)
+        // Packed INPUT_WRITE loader (0x2C)
         // ============================================================
 
-        // Test A - address holding register
-        axi_write(6'h30, 32'd1234, 4'hF);
-        repeat (2) @(posedge clk);
-        if (cnn_input_write_address !== 12'd1234) begin
-            $display("FAIL INPUT_ADDRESS port: got %0d", cnn_input_write_address);
-            errors++;
-        end else $display("PASS INPUT_ADDRESS port == 1234");
-        axi_read(6'h30, rd);
-        expect_eq("INPUT_ADDRESS readback", rd, 32'd1234);
-
-        // Test B - data holding register (0xFE as raw INT8 bits)
-        axi_write(6'h34, 32'h0000_00FE, 4'hF);
-        repeat (2) @(posedge clk);
-        if (cnn_input_write_data !== 8'hFE) begin
-            $display("FAIL INPUT_DATA port: got 0x%02h", cnn_input_write_data);
-            errors++;
-        end else $display("PASS INPUT_DATA port == 0xFE");
-        axi_read(6'h34, rd);
-        expect_eq("INPUT_DATA readback", rd, 32'h0000_00FE);
-
-        // Test C/D - one-cycle WRITE pulse, not sticky
+        // Test A/B - valid write addr=137 data=0xF4, one-cycle WE
         we_before = we_pulse_count;
-        axi_write(6'h38, 32'h0000_0001, 4'hF);
-        repeat (8) @(posedge clk);
+        do_input_write(12'd137, 8'hF4);
         if (we_pulse_count != we_before + 1) begin
-            $display("FAIL INPUT_COMMAND: expected one WE rising edge, got %0d",
+            $display("FAIL INPUT_WRITE: expected one WE, got %0d",
                      we_pulse_count - we_before);
             errors++;
-        end else $display("PASS INPUT_COMMAND: exactly one WE pulse");
+        end else $display("PASS INPUT_WRITE: exactly one WE pulse");
         if (last_we_high_cycles != 1) begin
-            $display("FAIL INPUT_COMMAND: WE high for %0d cycles (want 1)",
-                     last_we_high_cycles);
+            $display("FAIL INPUT_WRITE: WE high %0d cycles", last_we_high_cycles);
             errors++;
-        end else $display("PASS INPUT_COMMAND: WE high exactly one cycle");
-        if (last_we_addr !== 12'd1234 || last_we_data !== 8'hFE) begin
-            $display("FAIL INPUT_COMMAND capture: addr=%0d data=0x%02h",
+        end else $display("PASS INPUT_WRITE: WE high exactly one cycle");
+        if (last_we_addr !== 12'd137 || last_we_data !== 8'hF4) begin
+            $display("FAIL INPUT_WRITE capture: addr=%0d data=%02h",
                      last_we_addr, last_we_data);
             errors++;
-        end else $display("PASS INPUT_COMMAND: addr/data stable during WE");
+        end else $display("PASS INPUT_WRITE: addr=137 data=0xF4");
         if (cnn_input_write_enable !== 1'b0) begin
-            $display("FAIL INPUT_COMMAND sticky WE");
+            $display("FAIL INPUT_WRITE sticky WE");
             errors++;
-        end else $display("PASS INPUT_COMMAND: WE returned low");
-        axi_read(6'h38, rd);
-        expect_eq("INPUT_COMMAND readback", rd, 32'h0);
+        end else $display("PASS INPUT_WRITE: WE returned low");
+        axi_read(6'h2C, rd); expect_eq("INPUT_WRITE still WO", rd, 32'h0);
 
-        // Test E - busy protection
-        cnn_busy = 1'b1;
-        we_before = we_pulse_count;
-        axi_write(6'h30, 32'd10, 4'hF);
-        axi_write(6'h34, 32'h55, 4'hF);
-        axi_write(6'h38, 32'h1, 4'hF);
-        repeat (4) @(posedge clk);
-        if (we_pulse_count != we_before) begin
-            $display("FAIL busy protect: WE while busy");
-            errors++;
-        end else $display("PASS busy protect: WE ignored while busy");
-        // Holding regs still update while busy
-        axi_read(6'h30, rd);
-        expect_eq("INPUT_ADDRESS while busy", rd, 32'd10);
-        axi_read(6'h34, rd);
-        expect_eq("INPUT_DATA while busy", rd, 32'h55);
-        cnn_busy = 1'b0;
+        // Test C - signed byte patterns
+        begin
+            logic [7:0] signed_bytes [0:4];
+            signed_bytes[0] = 8'h00; // 0
+            signed_bytes[1] = 8'h01; // 1
+            signed_bytes[2] = 8'h7F; // 127
+            signed_bytes[3] = 8'hFF; // -1
+            signed_bytes[4] = 8'h80; // -128
+            for (i = 0; i < 5; i++) begin
+                we_before = we_pulse_count;
+                do_input_write(12'(100 + i), signed_bytes[i]);
+                if (we_pulse_count != we_before + 1 ||
+                    last_we_data !== signed_bytes[i] ||
+                    last_we_high_cycles != 1) begin
+                    $display("FAIL signed byte pattern %02h", signed_bytes[i]);
+                    errors++;
+                end
+            end
+            if (errors == 0)
+                $display("PASS signed INT8 bit patterns preserved");
+        end
 
-        // Test F - invalid address 3072
-        we_before = we_pulse_count;
-        axi_write(6'h30, 32'd3072, 4'hF);
-        axi_write(6'h34, 32'hAA, 4'hF);
-        axi_write(6'h38, 32'h1, 4'hF);
-        repeat (4) @(posedge clk);
-        if (we_pulse_count != we_before) begin
-            $display("FAIL invalid addr: WE for 3072");
-            errors++;
-        end else $display("PASS invalid addr: WE ignored for 3072");
-
-        // Test G - boundary 0 and 3071
+        // Test D/E - boundary addresses
         we_before = we_pulse_count;
         do_input_write(12'd0, 8'h11);
         if (we_pulse_count != we_before + 1 || last_we_addr !== 12'd0 ||
@@ -493,29 +468,39 @@ module tb_cnn_axi_ctrl (
             errors++;
         end else $display("PASS boundary addr 3071");
 
-        // Test H - START still works after input loader use
-        pulses_before = start_pulse_count;
+        // Test F - invalid addresses
         we_before = we_pulse_count;
-        axi_write(6'h00, 32'h1, 4'hF);
-        repeat (4) @(posedge clk);
-        if (start_pulse_count != pulses_before + 1) begin
-            $display("FAIL START after loader");
-            errors++;
-        end else $display("PASS START after loader");
+        do_input_write(12'd3072, 8'hAA);
+        do_input_write(12'd4095, 8'hBB);
         if (we_pulse_count != we_before) begin
-            $display("FAIL START must not pulse WE");
+            $display("FAIL invalid addr: WE for 3072/4095");
             errors++;
-        end else $display("PASS START independent of WE");
+        end else $display("PASS invalid addr: WE ignored for 3072 and 4095");
 
-        // Loading must not START
-        pulses_before = start_pulse_count;
-        do_input_write(12'd5, 8'h33);
-        if (start_pulse_count != pulses_before) begin
-            $display("FAIL loader must not START");
+        // Test G - busy protection
+        cnn_busy = 1'b1;
+        we_before = we_pulse_count;
+        do_input_write(12'd10, 8'h55);
+        if (we_pulse_count != we_before) begin
+            $display("FAIL busy protect: WE while busy");
             errors++;
-        end else $display("PASS loader independent of START");
+        end else $display("PASS busy protect: WE ignored while busy");
+        cnn_busy = 1'b0;
 
-        // Test I - short image loader sequence
+        // Incomplete WSTRB must not write
+        begin
+            logic [31:0] word;
+            we_before = we_pulse_count;
+            pack_input(12'd50, 8'h66, word);
+            axi_write(6'h2C, word, 4'h3); // missing byte2
+            repeat (4) @(posedge clk);
+            if (we_pulse_count != we_before) begin
+                $display("FAIL WSTRB: WE without byte2");
+                errors++;
+            end else $display("PASS WSTRB: require lanes 0..2");
+        end
+
+        // Test H - repeated writes
         begin
             logic [7:0] seq_data [0:3];
             logic [11:0] seq_addr [0:3];
@@ -530,33 +515,49 @@ module tb_cnn_axi_ctrl (
                     last_we_addr !== seq_addr[i] ||
                     last_we_data !== seq_data[i] ||
                     last_we_high_cycles != 1) begin
-                    $display("FAIL short load i=%0d addr=%0d data=%02h",
-                             i, last_we_addr, last_we_data);
+                    $display("FAIL repeated write i=%0d", i);
                     errors++;
                 end
             end
             if (errors == 0)
-                $display("PASS short image loader sequence (4 bytes)");
+                $display("PASS repeated INPUT_WRITE sequence");
         end
 
-        // Full 3072-byte golden vector through AXI loader interface
+        // START still works / independent of loader
+        pulses_before = start_pulse_count;
+        we_before = we_pulse_count;
+        axi_write(6'h00, 32'h1, 4'hF);
+        repeat (4) @(posedge clk);
+        if (start_pulse_count != pulses_before + 1) begin
+            $display("FAIL START after loader");
+            errors++;
+        end else $display("PASS START after loader");
+        if (we_pulse_count != we_before) begin
+            $display("FAIL START must not pulse WE");
+            errors++;
+        end else $display("PASS START independent of WE");
+
+        pulses_before = start_pulse_count;
+        do_input_write(12'd5, 8'h33);
+        if (start_pulse_count != pulses_before) begin
+            $display("FAIL loader must not START");
+            errors++;
+        end else $display("PASS loader independent of START");
+
+        // Full 3072-byte golden vector (one AXI write per byte)
         $readmemh("vectors/end_to_end/input_image.mem", golden_mem);
         load_errs = 0;
         we_before = we_pulse_count;
         for (i = 0; i < 3072; i++) begin
-            axi_write(6'h30, i, 4'hF);
-            axi_write(6'h34, {24'h0, golden_mem[i]}, 4'hF);
-            axi_write(6'h38, 32'h1, 4'hF);
-            repeat (4) @(posedge clk);
+            do_input_write(i[11:0], golden_mem[i]);
             if (we_pulse_count != we_before + i + 1 ||
                 last_we_addr !== i[11:0] ||
                 last_we_data !== golden_mem[i] ||
                 last_we_high_cycles != 1) begin
                 load_errs++;
                 if (load_errs <= 4)
-                    $display("FAIL full load @%0d: we=%0d addr=%0d data=%02h (exp %02h)",
-                             i, we_pulse_count, last_we_addr, last_we_data,
-                             golden_mem[i]);
+                    $display("FAIL full load @%0d: addr=%0d data=%02h (exp %02h)",
+                             i, last_we_addr, last_we_data, golden_mem[i]);
             end
         end
         if (we_pulse_count != we_before + 3072 || load_errs != 0) begin

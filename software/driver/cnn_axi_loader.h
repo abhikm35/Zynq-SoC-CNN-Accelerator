@@ -2,7 +2,8 @@
 #define CNN_AXI_LOADER_H
 
 /*
- * Soft helpers for cnn_axi_ctrl Activation RAM A input loading.
+ * Soft helpers for cnn_axi_ctrl Activation RAM A input loading via packed
+ * INPUT_WRITE @ 0x2C.
  *
  * Before including this header in a Vitis/standalone app:
  *
@@ -26,14 +27,23 @@
 extern "C" {
 #endif
 
-static inline void cnn_write_input_byte(uintptr_t base, uint16_t address, int8_t value)
+static inline void cnn_write_input(uintptr_t base, uint16_t address, int8_t value)
 {
-    CNN_AXI_OUT32(base + CNN_INPUT_ADDRESS_OFFSET, (uint32_t)(address & 0xFFFu));
-    CNN_AXI_OUT32(base + CNN_INPUT_DATA_OFFSET, (uint32_t)(uint8_t)value);
-    CNN_AXI_OUT32(base + CNN_INPUT_COMMAND_OFFSET, CNN_INPUT_WRITE_MASK);
+    uint32_t packed =
+        ((uint32_t)address & CNN_INPUT_ADDR_MASK) |
+        (((uint32_t)(uint8_t)value) << CNN_INPUT_DATA_SHIFT);
+
+    CNN_AXI_OUT32(base + CNN_INPUT_WRITE_OFFSET, packed);
 }
 
-/* Load CHW INT8 tensor (length must be 3072). Returns 0 on success, -1 on bad length. */
+/* Alias kept for call sites that used the previous three-register helper name. */
+static inline void cnn_write_input_byte(uintptr_t base, uint16_t address, int8_t value)
+{
+    cnn_write_input(base, address, value);
+}
+
+/* Load CHW INT8 tensor (length must be 3072). Returns 0 on success, -1 on bad length.
+ * Does not assert START — call CONTROL.START separately after load. */
 static inline int cnn_load_input(uintptr_t base, const int8_t *image, size_t length)
 {
     size_t i;
@@ -42,7 +52,7 @@ static inline int cnn_load_input(uintptr_t base, const int8_t *image, size_t len
         return -1;
 
     for (i = 0; i < length; ++i)
-        cnn_write_input_byte(base, (uint16_t)i, image[i]);
+        cnn_write_input(base, (uint16_t)i, image[i]);
 
     return 0;
 }

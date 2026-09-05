@@ -9,10 +9,6 @@ cnn_accelerator_synth_wrapper.sv
 timing-closed CNN (~83 MHz on xc7z010)
 ```
 
-Use this top for standalone synth / implement / timing characterization.
-Do **not** add this file as a Vivado Module Reference top — Vivado rejects
-SystemVerilog as the Module Reference top file.
-
 ## Zynq Block Design path
 
 ```text
@@ -22,65 +18,61 @@ zynq_cnn_system.bd
 cnn_accelerator_bd_wrapper.v      ← Add Module (plain Verilog top)
         |
         v
-cnn_accelerator_synth_wrapper.sv  ← unchanged timing-closed wrapper
+cnn_accelerator_synth_wrapper.sv
         |
         v
 CNN
 ```
 
-`cnn_accelerator_bd_wrapper.v` contains **no** accelerator computation. It is
-only a Verilog-2001 wire shell so IP Integrator Module Reference can accept a
-non-SystemVerilog top.
-
-## Current AXI control + input-loader architecture
+## AXI control + packed INPUT_WRITE image loader
 
 ```text
-                   Zynq PS
-                     ARM
+                         Zynq ARM
+                            |
+                            | AXI4-Lite
+                            v
+                    +---------------+
+                    | cnn_axi_ctrl  |
+                    |               |
+                    | CONTROL       |------> CNN start
+                    | STATUS        |<------ busy/done
+                    | RESULTS       |<------ logits/class
+                    |               |
+                    | INPUT_WRITE   |------+
+                    +---------------+      |
+                                           |
+                      +--------------------+
                       |
-                      | AXI4-Lite (M_AXI_GP0 → SmartConnect)
                       v
-             +------------------+
-             | cnn_axi_ctrl     |
-             |                  |
-             | START ---------->|------+
-             | STATUS <---------|      |
-             | RESULTS <--------|------+----> cnn_accelerator_bd_wrapper
-             |                  |
-             | INPUT_ADDRESS ---|------+
-             | INPUT_DATA ------|------|----> input_write_*
-             | INPUT_COMMAND ---|------+
-             +------------------+
+              input_write_enable
+              input_write_address
+              input_write_data
+                      |
+                      v
+                 Activation RAM A
+                      |
+                      v
+                     CNN
 ```
 
-Register map details: `docs/cnn_axi_register_map.md`.
+This AXI-Lite path is intentionally simple for first board bring-up.
+A future optimization may use AXI BRAM Controller or DMA — not in this milestone.
+
+Register details: `docs/cnn_axi_register_map.md`.
 
 ### Control / result wiring
 
 ```text
-cnn_axi_ctrl_0.cnn_start
-    -> cnn_accelerator_bd_wrapper.start
-
-cnn_accelerator_bd_wrapper.busy
-    -> cnn_axi_ctrl_0.cnn_busy
-
-cnn_accelerator_bd_wrapper.done
-    -> cnn_axi_ctrl_0.cnn_done
-
-cnn_accelerator_bd_wrapper.predicted_class
-    -> cnn_axi_ctrl_0.cnn_predicted_class
-
-cnn_accelerator_bd_wrapper.maximum_logit
-    -> cnn_axi_ctrl_0.cnn_maximum_logit
-
-cnn_accelerator_bd_wrapper.logit_0 .. logit_4
-    -> cnn_axi_ctrl_0.cnn_logit_0 .. cnn_logit_4
-
-cnn_accelerator_bd_wrapper.cycle_count
-    -> cnn_axi_ctrl_0.cnn_cycle_count
+cnn_axi_ctrl_0.cnn_start              -> bd_wrapper.start
+bd_wrapper.busy                       -> cnn_axi_ctrl_0.cnn_busy
+bd_wrapper.done                       -> cnn_axi_ctrl_0.cnn_done
+bd_wrapper.predicted_class            -> cnn_axi_ctrl_0.cnn_predicted_class
+bd_wrapper.maximum_logit              -> cnn_axi_ctrl_0.cnn_maximum_logit
+bd_wrapper.logit_0..4                 -> cnn_axi_ctrl_0.cnn_logit_0..4
+bd_wrapper.cycle_count                -> cnn_axi_ctrl_0.cnn_cycle_count
 ```
 
-### Input-load wiring (clears BD unconnected warnings)
+### Input-load wiring
 
 ```text
 cnn_axi_ctrl_0.cnn_input_write_enable
@@ -93,64 +85,46 @@ cnn_axi_ctrl_0.cnn_input_write_data[7:0]
     -> cnn_accelerator_bd_wrapper.input_write_data[7:0]
 ```
 
-CNN `rst` is **active-high**. If `proc_sys_reset` / AXI reset is active-low,
-invert once in the Block Design (`rst = ~peripheral_aresetn`).
+CNN `rst` is **active-high** (invert PS active-low reset once in the BD).
 
-## First software inference sequence
-
-1. Load 3072 INT8 values via INPUT_ADDRESS / INPUT_DATA / INPUT_COMMAND  
-   (`cnn_load_input` + `cnn_test_image` from `software/driver/`).  
-2. Confirm CNN idle (STATUS.BUSY = 0).  
-3. Write START (CONTROL bit 0).  
-4. Poll DONE (STATUS bit 1 sticky).  
-5. Read logits.  
-6. Read predicted class.  
-7. Read cycle count.  
-8. Compare against INT8 Python and RTL golden.
-
-## Why Vivado rejects the synth wrapper as Module Reference
-
-Typical message:
+### INPUT_WRITE packing (`0x2C`)
 
 ```text
-Reference 'cnn_accelerator_synth_wrapper' contains top file
-'.../cnn_accelerator_synth_wrapper.sv' of type SystemVerilog.
-This type is not allowed as the top file in the reference.
+packed = (address & 0xFFF) | ((uint8_t)value << 12)
+Xil_Out32(CNN_BASE + 0x2C, packed)
 ```
 
-Additional reasons the synth wrapper is a poor Module Reference boundary:
+One write → one-cycle `input_write_enable` (ignored if busy or address ≥ 3072).
 
-- many string `.mem` path parameters
-- parameter-dependent port width (`LOGIT_WIDTH`)
+## First-board software flow
 
-## Windows: refresh IP + connect input ports
+```text
+known INT8 input[3072]   // cnn_test_image / input_image.mem
 
-1. `git pull`
-2. Open the existing Vivado CNN project.
-3. Open/Edit the packaged `cnn_axi_ctrl` IP (`ip_repo/cnn_axi_ctrl_1_0`).
-4. Refresh/reload the changed HDL (`cnn_axi_ctrl.v`, slave lite).
-5. Re-package the AXI IP (let the packager update ports; avoid hand-editing
-   `component.xml` unless required).
-6. Return to `zynq_cnn_system` block design.
-7. Refresh `cnn_axi_ctrl_0` if Vivado marks it stale.
-8. Confirm new ports appear:
+for i = 0..3071:
+    packed = (i & 0xFFF) | ((uint8_t)input[i] << 12)
+    Xil_Out32(CNN_BASE + CNN_INPUT_WRITE_OFFSET, packed)
 
-   - `cnn_input_write_enable`
-   - `cnn_input_write_address[11:0]`
-   - `cnn_input_write_data[7:0]`
+write START
+poll DONE
+read logit_0..4, maximum_logit, predicted_class, cycle_count
+```
 
-9. Connect them to the BD wrapper `input_write_*` ports (table above).
-10. Save block design.
-11. Validate Design — unconnected `input_write_*` warnings should disappear.
+Target: INT8 Python == RTL == Arty Z7 FPGA.
 
-More Module Reference detail: `docs/cnn_bd_wrapper.md`.
+## Windows: refresh IP + connect ports
 
-## Next milestones (after Validate Design is clean)
+1. Commit/push Cursor changes; on Windows `git pull`.
+2. Open editable `cnn_axi_ctrl` packaged-IP project.
+3. Refresh source/file groups if stale.
+4. Confirm ports: `cnn_input_write_enable`, `_address[11:0]`, `_data[7:0]`.
+5. Review and Package / Re-Package the IP.
+6. Main CNN project: refresh/upgrade `cnn_axi_ctrl_0`.
+7. Open `zynq_cnn_system.bd`.
+8. Connect the three `cnn_input_write_*` pins to the BD wrapper (table above).
+9. Save → Validate Design (unconnected `input_write_*` warnings should clear).
 
-1. Assign/check AXI address range.  
-2. Generate BD HDL wrapper.  
-3. Synth / impl at ~83.333 MHz; confirm timing.  
-4. Bitstream → XSA → first Vitis program.  
-5. Load golden 3072-byte image, START, compare FPGA vs Python/RTL.  
+## Next milestones
 
-Do **not** add AXI BRAM Controller / DMA in this bring-up path yet.
+Assign AXI address → generate BD wrapper → synth/impl @ ~83.333 MHz →
+bitstream → XSA → Vitis load golden image and compare.

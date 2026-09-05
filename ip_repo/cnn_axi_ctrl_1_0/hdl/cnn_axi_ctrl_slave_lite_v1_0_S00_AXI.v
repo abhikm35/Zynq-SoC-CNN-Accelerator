@@ -228,10 +228,13 @@
 	assign cnn_start = cnn_start_r;
 
 	//----------------------------------------------------------------------
-	// Input loader: INPUT_ADDRESS @ 0x30 (sel C), INPUT_DATA @ 0x34 (sel D),
-	// INPUT_COMMAND @ 0x38 (sel E). WRITE bit0 -> one-cycle WE pulse.
+	// INPUT_WRITE @ 0x2C / sel 4'hB — packed one-shot Activation RAM A write
+	//   [11:0]  = address (valid 0..3071)
+	//   [19:12] = INT8 data bits
+	//   [31:20] = reserved
+	// Requires WSTRB[2:0]=3'b111. Ignored if cnn_busy or address >= 3072.
 	//----------------------------------------------------------------------
-	localparam [11:0] CNN_INPUT_ADDR_MAX = 12'd3071; // 3072 INT8 values
+	localparam [11:0] CNN_INPUT_LEN = 12'd3072;
 
 	reg [11:0] input_address_reg;
 	reg [7:0]  input_data_reg;
@@ -239,14 +242,11 @@
 
 	wire input_write_cmd =
 	    axi_write_commit &&
-	    (wr_reg_sel == 4'hE) &&
-	    S_AXI_WSTRB[0] &&
-	    S_AXI_WDATA[0];
+	    (wr_reg_sel == 4'hB) &&
+	    S_AXI_WSTRB[0] && S_AXI_WSTRB[1] && S_AXI_WSTRB[2];
 
-	wire input_addr_in_range = (input_address_reg <= CNN_INPUT_ADDR_MAX);
+	wire input_addr_in_range = (S_AXI_WDATA[11:0] < CNN_INPUT_LEN);
 
-	// Ignore WRITE while busy or address out of range (0..3071).
-	// Holding registers are still updated by software writes to 0x30/0x34.
 	wire input_write_accepted =
 	    input_write_cmd &&
 	    (cnn_busy == 1'b0) &&
@@ -276,21 +276,10 @@
 	      done_sticky <= 1'b1;
 	    end
 
-	    // INPUT_ADDRESS @ 0x30: keep [11:0]; honor WSTRB on low bytes
-	    if (axi_write_commit && (wr_reg_sel == 4'hC)) begin
-	      if (S_AXI_WSTRB[0])
-	        input_address_reg[7:0] <= S_AXI_WDATA[7:0];
-	      if (S_AXI_WSTRB[1])
-	        input_address_reg[11:8] <= S_AXI_WDATA[11:8];
-	    end
-
-	    // INPUT_DATA @ 0x34: raw INT8 bits in [7:0]; require WSTRB[0]
-	    if (axi_write_commit && (wr_reg_sel == 4'hD) && S_AXI_WSTRB[0]) begin
-	      input_data_reg <= S_AXI_WDATA[7:0];
-	    end
-
-	    // INPUT_COMMAND @ 0x38: one-cycle WE (same timing style as START)
+	    // Capture packed addr/data and assert WE for exactly one cycle
 	    if (input_write_accepted) begin
+	      input_address_reg <= S_AXI_WDATA[11:0];
+	      input_data_reg <= S_AXI_WDATA[19:12];
 	      cnn_input_write_enable_r <= 1'b1;
 	    end
 	  end
@@ -321,10 +310,7 @@
 	// 0x10..0x20 LOGIT_0..4
 	// 0x24 CYCLE_COUNT_LOW
 	// 0x28 CYCLE_COUNT_HIGH
-	// 0x2C reserved          -> 0
-	// 0x30 INPUT_ADDRESS     -> holding [11:0]
-	// 0x34 INPUT_DATA        -> holding [7:0]
-	// 0x38 INPUT_COMMAND     -> 0 (WRITE is a pulse command)
+	// 0x2C INPUT_WRITE       -> 0 (write-only packed command)
 	wire [OPT_MEM_ADDR_BITS:0] rd_reg_sel =
 	    axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS : ADDR_LSB];
 
@@ -343,10 +329,7 @@
 	    4'h8: reg_data_out = logit4_sx;
 	    4'h9: reg_data_out = cnn_cycle_count[31:0];
 	    4'hA: reg_data_out = cnn_cycle_count[63:32];
-	    4'hB: reg_data_out = 32'h0000_0000;
-	    4'hC: reg_data_out = {20'h0, input_address_reg};
-	    4'hD: reg_data_out = {24'h0, input_data_reg};
-	    4'hE: reg_data_out = 32'h0000_0000;
+	    4'hB: reg_data_out = 32'h0000_0000; // INPUT_WRITE (WO)
 	    default: reg_data_out = 32'h0000_0000;
 	  endcase
 	end
