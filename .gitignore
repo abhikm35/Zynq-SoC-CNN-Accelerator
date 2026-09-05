@@ -62,3 +62,9 @@ vivado/*.hw/
 vivado/*.ip_user_files/
 vivado/generated/*
 !vivado/generated/.gitkeep
+
+# Vitis local workspace (generated on Windows; not the Git source of truth)
+vitis_workspace/
+**/_ide/
+**/Debug/
+**/Release/
