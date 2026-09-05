@@ -107,5 +107,6 @@ Leave `input_write_*` unconnected or tied off until the Activation RAM milestone
 
 ## Related docs
 
+- Integration overview: `docs/zynq_axi_integration.md`
 - AXI register map: `docs/cnn_axi_register_map.md`
 - General Windows flow: `docs/windows_vivado_workflow.md`

@@ -1,19 +1,23 @@
 // cnn_accelerator_bd_wrapper.v
-// Plain Verilog-2001 Block Design / Module Reference shell around the
-// timing-closed cnn_accelerator_synth_wrapper.
 //
-// Why this file is .v (not .sv):
-//   Vivado IP Integrator "Add Module" can still hide SystemVerilog Module
-//   References even when ports are simple. A Verilog-2001 top with only
-//   scalar/packed wire ports is the most compatible BD-facing boundary.
+// Plain-Verilog compatibility wrapper for Vivado IP Integrator
+// Module Reference.
 //
-// This wrapper:
-//   - exposes only simple scalar / packed ports (no string parameters)
+// The timing-closed CNN implementation remains in
+// cnn_accelerator_synth_wrapper.sv.
+//
+// This wrapper exists because the current Vivado Module Reference flow
+// does not accept the SystemVerilog file as the reference top
+// (error: top file of type SystemVerilog is not allowed in the reference).
+//
+// Behavior:
+//   - exposes only simple scalar / packed wire ports (no string parameters)
 //   - instantiates cnn_accelerator_synth_wrapper exactly once
-//   - does not duplicate CNN datapath, AXI, sticky-DONE, or START pulsing
+//   - no CNN arithmetic, AXI, sticky-DONE, or START-pulse logic
 //
 // Hierarchy:
-//   Block Design -> cnn_accelerator_bd_wrapper -> cnn_accelerator_synth_wrapper
+//   Block Design -> cnn_accelerator_bd_wrapper.v
+//                -> cnn_accelerator_synth_wrapper.sv
 //                -> cnn_accelerator_shared_compute_top
 
 `timescale 1ns / 1ps
@@ -25,7 +29,7 @@ module cnn_accelerator_bd_wrapper (
 
     (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst RST" *)
     (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME rst, POLARITY ACTIVE_HIGH" *)
-    input  wire               rst,   // active-high (CNN core polarity)
+    input  wire               rst,   // active-high (same polarity as synth wrapper)
 
     input  wire               start,
     output wire               busy,
@@ -46,11 +50,9 @@ module cnn_accelerator_bd_wrapper (
     input  wire signed [7:0]  input_write_data
 );
 
-    // Memory paths stay inside the hierarchy (not on the BD boundary).
-    // Named parameter override is Verilog-2001; child remains SystemVerilog.
-    cnn_accelerator_synth_wrapper #(
-        .LOGIT_WIDTH(32)
-    ) u_synth (
+    // Use synth-wrapper default parameters (LOGIT_WIDTH, *.mem paths).
+    // Do not expose model-memory path parameters on the BD boundary.
+    cnn_accelerator_synth_wrapper u_cnn (
         .clk(clk),
         .rst(rst),
         .start(start),
