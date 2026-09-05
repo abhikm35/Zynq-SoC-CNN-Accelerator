@@ -15,7 +15,8 @@
 //   saturated_value = clip(zero_point_adjusted, -128, 127)
 //
 // Multiplier/shift are module inputs so per-output-channel Conv1 params work.
-// No floating-point. Combinational for unit testing; register externally if needed.
+// Combinational for unit testing; pipeline externally for timing
+// (register wide_product, then requantize_from_product).
 
 `timescale 1ns / 1ps
 
@@ -34,40 +35,22 @@ module requantize (
 
     logic signed [63:0] acc_sext;
     logic signed [63:0] mult_sext;
-    logic signed [63:0] neg_wide;
-    logic signed [63:0] tmp;
 
     always_comb begin
         acc_sext  = {{32{accumulator[31]}}, accumulator};
         mult_sext = {{32{multiplier[31]}}, multiplier};
         wide_product = acc_sext * mult_sext;
-
-        if (shift == 6'd0) begin
-            rounding_offset = 64'sd0;
-            rounded_product = wide_product;
-            shifted_value   = wide_product;
-        end else begin
-            // half = 2^(shift-1)
-            rounding_offset = 64'sd1 <<< (shift - 6'd1);
-            if (wide_product >= 64'sd0) begin
-                rounded_product = wide_product + rounding_offset;
-                shifted_value   = rounded_product >>> shift;
-            end else begin
-                neg_wide = -wide_product;
-                tmp = neg_wide + rounding_offset;
-                rounded_product = -(tmp); // debug: negated rounded magnitude before shift
-                shifted_value   = -(tmp >>> shift);
-            end
-        end
-
-        zero_point_adjusted = shifted_value[31:0] + {{24{output_zero_point[7]}}, output_zero_point};
-
-        if (zero_point_adjusted > 32'sd127)
-            saturated_value = 8'sd127;
-        else if (zero_point_adjusted < -32'sd128)
-            saturated_value = -8'sd128;
-        else
-            saturated_value = zero_point_adjusted[7:0];
     end
+
+    requantize_from_product u_post (
+        .wide_product        (wide_product),
+        .shift               (shift),
+        .output_zero_point   (output_zero_point),
+        .rounding_offset     (rounding_offset),
+        .rounded_product     (rounded_product),
+        .shifted_value       (shifted_value),
+        .zero_point_adjusted (zero_point_adjusted),
+        .saturated_value     (saturated_value)
+    );
 
 endmodule

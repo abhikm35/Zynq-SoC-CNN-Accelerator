@@ -31,6 +31,7 @@ set cnn_fpga_part "xc7z010clg400-1"
 # ---------------------------------------------------------------------------
 set cnn_rtl_sources [list \
     [cnn_repo_path rtl int8_mac.sv] \
+    [cnn_repo_path rtl requantize_from_product.sv] \
     [cnn_repo_path rtl requantize.sv] \
     [cnn_repo_path rtl relu_int8.sv] \
     [cnn_repo_path rtl saturate_int8.sv] \

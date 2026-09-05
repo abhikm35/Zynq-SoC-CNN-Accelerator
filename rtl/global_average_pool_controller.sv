@@ -2,11 +2,15 @@
 // GAP over full Pool2 tensor (trained: 32 x 8 x 8 -> 32 INT8 values).
 //
 // Per channel:
-//   CLEAR_SUM -> (ISSUE -> WAIT -> ACCUMULATE) x64 -> AVERAGE -> WRITE -> ADVANCE
+//   CLEAR_SUM -> (ISSUE -> WAIT -> ACCUMULATE) x64
+//   -> AVERAGE -> REQ_MUL -> REQ_OUT -> WRITE -> ADVANCE
 //
 // Exact Python path (integer_inference.py):
 //   avg = saturate(round_divide_int(sum, 64))          // ties away from zero
 //   gap = requantize_int32(avg, gap_mult, gap_shift)    // shared per-tensor
+//
+// Timing: average, 64-bit multiply, and round/shift/sat are separate cycles
+// so each stage can close at ~100 MHz.
 //
 // Sync Pool2 memory: ISSUE -> WAIT -> ACCUMULATE (1-cycle read latency).
 
@@ -54,9 +58,11 @@ module global_average_pool_controller #(
     localparam logic [3:0] ST_WAIT       = 4'd3;
     localparam logic [3:0] ST_ACCUMULATE = 4'd4;
     localparam logic [3:0] ST_AVERAGE    = 4'd5;
-    localparam logic [3:0] ST_WRITE      = 4'd6;
-    localparam logic [3:0] ST_ADVANCE    = 4'd7;
-    localparam logic [3:0] ST_DONE       = 4'd8;
+    localparam logic [3:0] ST_REQ_MUL    = 4'd6;
+    localparam logic [3:0] ST_REQ_OUT    = 4'd7;
+    localparam logic [3:0] ST_WRITE      = 4'd8;
+    localparam logic [3:0] ST_ADVANCE    = 4'd9;
+    localparam logic [3:0] ST_DONE       = 4'd10;
 
     logic [3:0] state;
     logic [3:0] state_n;
@@ -69,6 +75,7 @@ module global_average_pool_controller #(
     logic signed [31:0] final_sum_r;
     logic signed [7:0] avg_r;
     logic signed [7:0] gap_r;
+    logic signed [63:0] wide_product_r;
 
     logic signed [7:0] avg_w;
     logic signed [31:0] rounding_adjustment_w;
@@ -109,14 +116,19 @@ module global_average_pool_controller #(
         .final_output             (avg_w)
     );
 
-    assign avg_as_acc = {{24{avg_w[7]}}, avg_w};
+    // Requantize multiply from registered average (ST_REQ_MUL samples wide_product_w).
+    assign avg_as_acc = {{24{avg_r[7]}}, avg_r};
 
-    requantize u_req (
-        .accumulator         (avg_as_acc),
-        .multiplier          (GAP_MULTIPLIER),
+    always_comb begin
+        wide_product_w = {{32{avg_as_acc[31]}}, avg_as_acc}
+                       * {{32{GAP_MULTIPLIER[31]}}, GAP_MULTIPLIER};
+    end
+
+    // Round/shift/sat from registered product (ST_REQ_OUT samples gap_sat_w).
+    requantize_from_product u_req_post (
+        .wide_product        (wide_product_r),
         .shift               (GAP_SHIFT),
         .output_zero_point   (8'sd0),
-        .wide_product        (wide_product_w),
         .rounding_offset     (rounding_offset_w),
         .rounded_product     (rounded_product_w),
         .shifted_value       (shifted_req_w),
@@ -153,6 +165,7 @@ module global_average_pool_controller #(
             final_sum_r <= 32'sd0;
             avg_r <= 8'sd0;
             gap_r <= 8'sd0;
+            wide_product_r <= 64'sd0;
             busy <= 1'b0;
             gap_done <= 1'b0;
         end else begin
@@ -172,6 +185,7 @@ module global_average_pool_controller #(
                         final_sum_r <= 32'sd0;
                         avg_r <= 8'sd0;
                         gap_r <= 8'sd0;
+                        wide_product_r <= 64'sd0;
                     end
                 end
                 ST_CLEAR_SUM: begin
@@ -189,6 +203,11 @@ module global_average_pool_controller #(
                 ST_AVERAGE: begin
                     final_sum_r <= sum_r;
                     avg_r <= avg_w;
+                end
+                ST_REQ_MUL: begin
+                    wide_product_r <= wide_product_w;
+                end
+                ST_REQ_OUT: begin
                     gap_r <= gap_sat_w;
                 end
                 ST_WRITE: begin
@@ -230,6 +249,12 @@ module global_average_pool_controller #(
                     state_n = ST_ISSUE;
             end
             ST_AVERAGE: begin
+                state_n = ST_REQ_MUL;
+            end
+            ST_REQ_MUL: begin
+                state_n = ST_REQ_OUT;
+            end
+            ST_REQ_OUT: begin
                 state_n = ST_WRITE;
             end
             ST_WRITE: begin
