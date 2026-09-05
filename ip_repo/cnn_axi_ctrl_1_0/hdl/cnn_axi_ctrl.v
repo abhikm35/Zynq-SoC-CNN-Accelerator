@@ -30,6 +30,10 @@
 		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_3,
 		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_4,
 		input  wire [63:0]                       cnn_cycle_count,
+		// Activation RAM A load (connect to cnn_accelerator_bd_wrapper)
+		output wire                              cnn_input_write_enable,
+		output wire [11:0]                       cnn_input_write_address,
+		output wire [7:0]                        cnn_input_write_data,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -74,6 +78,9 @@
 		.cnn_logit_3(cnn_logit_3),
 		.cnn_logit_4(cnn_logit_4),
 		.cnn_cycle_count(cnn_cycle_count),
+		.cnn_input_write_enable(cnn_input_write_enable),
+		.cnn_input_write_address(cnn_input_write_address),
+		.cnn_input_write_data(cnn_input_write_data),
 		.S_AXI_ACLK(s00_axi_aclk),
 		.S_AXI_ARESETN(s00_axi_aresetn),
 		.S_AXI_AWADDR(s00_axi_awaddr),

@@ -32,36 +32,30 @@ CNN
 only a Verilog-2001 wire shell so IP Integrator Module Reference can accept a
 non-SystemVerilog top.
 
-AXI4-Lite control remains a **separate** IP:
+## Current AXI control + input-loader architecture
 
 ```text
-Zynq PS
-   |
-   | AXI4-Lite
-   v
-cnn_axi_ctrl
-   |
-   | ordinary RTL signals
-   v
-cnn_accelerator_bd_wrapper
+                   Zynq PS
+                     ARM
+                      |
+                      | AXI4-Lite (M_AXI_GP0 → SmartConnect)
+                      v
+             +------------------+
+             | cnn_axi_ctrl     |
+             |                  |
+             | START ---------->|------+
+             | STATUS <---------|      |
+             | RESULTS <--------|------+----> cnn_accelerator_bd_wrapper
+             |                  |
+             | INPUT_ADDRESS ---|------+
+             | INPUT_DATA ------|------|----> input_write_*
+             | INPUT_COMMAND ---|------+
+             +------------------+
 ```
 
-## Why Vivado rejects the synth wrapper as Module Reference
+Register map details: `docs/cnn_axi_register_map.md`.
 
-Typical message:
-
-```text
-Reference 'cnn_accelerator_synth_wrapper' contains top file
-'.../cnn_accelerator_synth_wrapper.sv' of type SystemVerilog.
-This type is not allowed as the top file in the reference.
-```
-
-Additional reasons the synth wrapper is a poor Module Reference boundary:
-
-- many string `.mem` path parameters
-- parameter-dependent port width (`LOGIT_WIDTH`)
-
-## Control / result wiring (actual port names)
+### Control / result wiring
 
 ```text
 cnn_axi_ctrl_0.cnn_start
@@ -86,27 +80,77 @@ cnn_accelerator_bd_wrapper.cycle_count
     -> cnn_axi_ctrl_0.cnn_cycle_count
 ```
 
+### Input-load wiring (clears BD unconnected warnings)
+
+```text
+cnn_axi_ctrl_0.cnn_input_write_enable
+    -> cnn_accelerator_bd_wrapper.input_write_enable
+
+cnn_axi_ctrl_0.cnn_input_write_address[11:0]
+    -> cnn_accelerator_bd_wrapper.input_write_address[11:0]
+
+cnn_axi_ctrl_0.cnn_input_write_data[7:0]
+    -> cnn_accelerator_bd_wrapper.input_write_data[7:0]
+```
+
 CNN `rst` is **active-high**. If `proc_sys_reset` / AXI reset is active-low,
 invert once in the Block Design (`rst = ~peripheral_aresetn`).
 
-Leave `input_write_*` tied off until the AXI BRAM / Activation RAM A milestone.
+## First software inference sequence
 
-## Windows: add the Module Reference
+1. Load 3072 INT8 values via INPUT_ADDRESS / INPUT_DATA / INPUT_COMMAND  
+   (`cnn_load_input` + `cnn_test_image` from `software/driver/`).  
+2. Confirm CNN idle (STATUS.BUSY = 0).  
+3. Write START (CONTROL bit 0).  
+4. Poll DONE (STATUS bit 1 sticky).  
+5. Read logits.  
+6. Read predicted class.  
+7. Read cycle count.  
+8. Compare against INT8 Python and RTL golden.
+
+## Why Vivado rejects the synth wrapper as Module Reference
+
+Typical message:
+
+```text
+Reference 'cnn_accelerator_synth_wrapper' contains top file
+'.../cnn_accelerator_synth_wrapper.sv' of type SystemVerilog.
+This type is not allowed as the top file in the reference.
+```
+
+Additional reasons the synth wrapper is a poor Module Reference boundary:
+
+- many string `.mem` path parameters
+- parameter-dependent port width (`LOGIT_WIDTH`)
+
+## Windows: refresh IP + connect input ports
 
 1. `git pull`
 2. Open the existing Vivado CNN project.
-3. Confirm `rtl/cnn_accelerator_bd_wrapper.v` appears in Design Sources.
-4. If not: **Add Sources → Add or Create Design Sources → Add Files** and select
-   `rtl/cnn_accelerator_bd_wrapper.v`. Refresh / Update Compile Order.
-5. Open `zynq_cnn_system` block design.
-6. Right-click canvas → **Add Module**.
-7. Select **`cnn_accelerator_bd_wrapper`** (the `.v` module).
-8. Add it to the block design.
-9. Do **not** select `cnn_accelerator_synth_wrapper` directly.
+3. Open/Edit the packaged `cnn_axi_ctrl` IP (`ip_repo/cnn_axi_ctrl_1_0`).
+4. Refresh/reload the changed HDL (`cnn_axi_ctrl.v`, slave lite).
+5. Re-package the AXI IP (let the packager update ports; avoid hand-editing
+   `component.xml` unless required).
+6. Return to `zynq_cnn_system` block design.
+7. Refresh `cnn_axi_ctrl_0` if Vivado marks it stale.
+8. Confirm new ports appear:
 
-More detail: `docs/cnn_bd_wrapper.md`.
+   - `cnn_input_write_enable`
+   - `cnn_input_write_address[11:0]`
+   - `cnn_input_write_data[7:0]`
 
-## Next milestones (not in this wrapper)
+9. Connect them to the BD wrapper `input_write_*` ports (table above).
+10. Save block design.
+11. Validate Design — unconnected `input_write_*` warnings should disappear.
 
-1. Connect `cnn_axi_ctrl` ↔ `cnn_accelerator_bd_wrapper` and clock/reset.
-2. Make Activation RAM A processor-accessible (AXI BRAM Controller path).
+More Module Reference detail: `docs/cnn_bd_wrapper.md`.
+
+## Next milestones (after Validate Design is clean)
+
+1. Assign/check AXI address range.  
+2. Generate BD HDL wrapper.  
+3. Synth / impl at ~83.333 MHz; confirm timing.  
+4. Bitstream → XSA → first Vitis program.  
+5. Load golden 3072-byte image, START, compare FPGA vs Python/RTL.  
+
+Do **not** add AXI BRAM Controller / DMA in this bring-up path yet.

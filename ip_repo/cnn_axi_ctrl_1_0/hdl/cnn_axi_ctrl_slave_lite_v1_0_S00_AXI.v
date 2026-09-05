@@ -27,6 +27,10 @@
 		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_3,
 		input  wire signed [C_CNN_LOGIT_WIDTH-1:0] cnn_logit_4,
 		input  wire [63:0]                       cnn_cycle_count,
+		// Activation RAM A input-tensor load (AXI4-Lite loader; not BRAM/DMA)
+		output wire                              cnn_input_write_enable,
+		output wire [11:0]                       cnn_input_write_address,
+		output wire [7:0]                        cnn_input_write_data,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -223,20 +227,71 @@
 
 	assign cnn_start = cnn_start_r;
 
+	//----------------------------------------------------------------------
+	// Input loader: INPUT_ADDRESS @ 0x30 (sel C), INPUT_DATA @ 0x34 (sel D),
+	// INPUT_COMMAND @ 0x38 (sel E). WRITE bit0 -> one-cycle WE pulse.
+	//----------------------------------------------------------------------
+	localparam [11:0] CNN_INPUT_ADDR_MAX = 12'd3071; // 3072 INT8 values
+
+	reg [11:0] input_address_reg;
+	reg [7:0]  input_data_reg;
+	reg        cnn_input_write_enable_r;
+
+	wire input_write_cmd =
+	    axi_write_commit &&
+	    (wr_reg_sel == 4'hE) &&
+	    S_AXI_WSTRB[0] &&
+	    S_AXI_WDATA[0];
+
+	wire input_addr_in_range = (input_address_reg <= CNN_INPUT_ADDR_MAX);
+
+	// Ignore WRITE while busy or address out of range (0..3071).
+	// Holding registers are still updated by software writes to 0x30/0x34.
+	wire input_write_accepted =
+	    input_write_cmd &&
+	    (cnn_busy == 1'b0) &&
+	    input_addr_in_range;
+
+	assign cnn_input_write_enable  = cnn_input_write_enable_r;
+	assign cnn_input_write_address = input_address_reg;
+	assign cnn_input_write_data    = input_data_reg;
+
 	always @(posedge S_AXI_ACLK)
 	begin
 	  if (S_AXI_ARESETN == 1'b0) begin
 	    cnn_start_r <= 1'b0;
 	    done_sticky <= 1'b0;
+	    input_address_reg <= 12'd0;
+	    input_data_reg <= 8'd0;
+	    cnn_input_write_enable_r <= 1'b0;
 	  end else begin
-	    // Default: pulse low every cycle unless accepting START this cycle
+	    // Default: pulses low every cycle unless accepting a command
 	    cnn_start_r <= 1'b0;
+	    cnn_input_write_enable_r <= 1'b0;
 
 	    if (start_accepted) begin
 	      cnn_start_r <= 1'b1;
 	      done_sticky <= 1'b0;
 	    end else if (cnn_done) begin
 	      done_sticky <= 1'b1;
+	    end
+
+	    // INPUT_ADDRESS @ 0x30: keep [11:0]; honor WSTRB on low bytes
+	    if (axi_write_commit && (wr_reg_sel == 4'hC)) begin
+	      if (S_AXI_WSTRB[0])
+	        input_address_reg[7:0] <= S_AXI_WDATA[7:0];
+	      if (S_AXI_WSTRB[1])
+	        input_address_reg[11:8] <= S_AXI_WDATA[11:8];
+	    end
+
+	    // INPUT_DATA @ 0x34: raw INT8 bits in [7:0]; require WSTRB[0]
+	    if (axi_write_commit && (wr_reg_sel == 4'hD) && S_AXI_WSTRB[0]) begin
+	      input_data_reg <= S_AXI_WDATA[7:0];
+	    end
+
+	    // INPUT_COMMAND @ 0x38: one-cycle WE (same timing style as START)
+	    if (input_write_accepted) begin
+	      cnn_input_write_enable_r <= 1'b1;
 	    end
 	  end
 	end
@@ -258,7 +313,7 @@
 	wire [31:0] predicted_class_zx = {29'b0, cnn_predicted_class};
 	wire [31:0] status_word = {30'b0, done_sticky, cnn_busy};
 
-	// Read-only map (writes to these addresses have no effect on CNN/AXI state):
+	// Register map (word select = offset[5:2]):
 	// 0x00 CONTROL           -> 0 (START is write-one command only)
 	// 0x04 STATUS            -> {done_sticky, busy}
 	// 0x08 PREDICTED_CLASS
@@ -267,6 +322,9 @@
 	// 0x24 CYCLE_COUNT_LOW
 	// 0x28 CYCLE_COUNT_HIGH
 	// 0x2C reserved          -> 0
+	// 0x30 INPUT_ADDRESS     -> holding [11:0]
+	// 0x34 INPUT_DATA        -> holding [7:0]
+	// 0x38 INPUT_COMMAND     -> 0 (WRITE is a pulse command)
 	wire [OPT_MEM_ADDR_BITS:0] rd_reg_sel =
 	    axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS : ADDR_LSB];
 
@@ -286,6 +344,9 @@
 	    4'h9: reg_data_out = cnn_cycle_count[31:0];
 	    4'hA: reg_data_out = cnn_cycle_count[63:32];
 	    4'hB: reg_data_out = 32'h0000_0000;
+	    4'hC: reg_data_out = {20'h0, input_address_reg};
+	    4'hD: reg_data_out = {24'h0, input_data_reg};
+	    4'hE: reg_data_out = 32'h0000_0000;
 	    default: reg_data_out = 32'h0000_0000;
 	  endcase
 	end
