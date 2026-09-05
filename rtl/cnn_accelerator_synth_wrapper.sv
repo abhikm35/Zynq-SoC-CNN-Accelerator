@@ -3,14 +3,17 @@
 //
 // The full cnn_accelerator_shared_compute_top exposes many TB/debug/host
 // ports (~1000 IOs). xc7z010clg400-1 only has ~230 user IOs, so that top
-// cannot be placed as-is. This wrapper keeps a tiny pinout and leaves the
+// cannot be placed as-is. This wrapper keeps a small pinout and leaves the
 // verified accelerator intact underneath (no arithmetic changes).
 //
-// Exposed pins (FPGA characterization / future PS wrapper):
+// Exposed pins:
 //   clk, rst, start, busy, done, predicted_class, maximum_logit
+//   logit_0..4, cycle_count
+//   input_write_enable/address/data  (Activation RAM A load; for future PS path)
 //
-// Simulation / AXI bring-up should continue to use
-// cnn_accelerator_shared_compute_top directly.
+// NOTE: This module has string file-path parameters. Vivado IP Integrator
+// Module Reference typically treats that as incompatible. For Block Design,
+// use cnn_accelerator_bd_wrapper (no string parameters on its boundary).
 
 `timescale 1ns / 1ps
 
@@ -35,7 +38,18 @@ module cnn_accelerator_synth_wrapper #(
     output logic                          busy,
     output logic                          done,
     output logic [2:0]                    predicted_class,
-    output logic signed [LOGIT_WIDTH-1:0] maximum_logit
+    output logic signed [LOGIT_WIDTH-1:0] maximum_logit,
+    output logic signed [LOGIT_WIDTH-1:0] logit_0,
+    output logic signed [LOGIT_WIDTH-1:0] logit_1,
+    output logic signed [LOGIT_WIDTH-1:0] logit_2,
+    output logic signed [LOGIT_WIDTH-1:0] logit_3,
+    output logic signed [LOGIT_WIDTH-1:0] logit_4,
+    output logic [63:0]                   cycle_count,
+    // Optional host load into Activation RAM A (input tensor). Tied off by
+    // characterization flows that do not need runtime image load.
+    input  logic                          input_write_enable,
+    input  logic [11:0]                   input_write_address,
+    input  logic signed [7:0]             input_write_data
 );
 
     // Keep the full accelerator from being optimized away during synth.
@@ -62,14 +76,12 @@ module cnn_accelerator_synth_wrapper #(
         .done(done),
         .predicted_class(predicted_class),
         .maximum_logit(maximum_logit),
-
-        // Unused at this pinout — tied off / left open
-        .logit_0(),
-        .logit_1(),
-        .logit_2(),
-        .logit_3(),
-        .logit_4(),
-        .cycle_count(),
+        .logit_0(logit_0),
+        .logit_1(logit_1),
+        .logit_2(logit_2),
+        .logit_3(logit_3),
+        .logit_4(logit_4),
+        .cycle_count(cycle_count),
         .state_id(),
         .stage_id(),
         .dbg_conv1_done(),
@@ -108,9 +120,9 @@ module cnn_accelerator_synth_wrapper #(
         .dbg_act_b_re(),
         .dbg_act_b_raddr(),
 
-        .input_write_enable(1'b0),
-        .input_write_address(12'd0),
-        .input_write_data(8'sd0),
+        .input_write_enable(input_write_enable),
+        .input_write_address(input_write_address),
+        .input_write_data(input_write_data),
         .act_a_read_enable(1'b0),
         .act_a_read_address(14'd0),
         .act_a_read_data(),

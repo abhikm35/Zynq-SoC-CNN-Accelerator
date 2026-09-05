@@ -456,6 +456,36 @@ AXI_CTRL_SOURCES = {
     ],
 }
 
+BD_WRAPPER_CORE = SHARED_CONV_CORE + [
+    "rtl/maxpool2x2_address_generator.sv",
+    "rtl/maxpool2_address_generator.sv",
+    "rtl/shared_maxpool_address_generator.sv",
+    "rtl/shared_maxpool_engine.sv",
+    "rtl/int32_sync_ram.sv",
+    "rtl/activation_ram.sv",
+    "rtl/max4_int8.sv",
+    "rtl/gap_average.sv",
+    "rtl/fc_address_generator.sv",
+    "rtl/saturate_shifted_int32.sv",
+    "rtl/fc_logit_from_product.sv",
+    "rtl/fc_output_postprocess.sv",
+    "rtl/gap_output_storage.sv",
+    "rtl/logit_storage.sv",
+    "rtl/global_average_pool_controller.sv",
+    "rtl/fully_connected_class_engine.sv",
+    "rtl/fully_connected_layer_controller.sv",
+    "rtl/signed_argmax5_controller.sv",
+    "rtl/cnn_top_controller.sv",
+    "rtl/cnn_accelerator_shared_compute_top.sv",
+    "rtl/cnn_accelerator_synth_wrapper.sv",
+    "rtl/cnn_accelerator_bd_wrapper.sv",
+]
+
+BD_WRAPPER_SOURCES = {
+    "tb_cnn_bd_wrapper_elab": list(BD_WRAPPER_CORE),
+    "tb_cnn_bd_wrapper_compare": list(BD_WRAPPER_CORE),
+}
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -484,6 +514,7 @@ def main() -> None:
             "shared_conv",
             "shared_pool",
             "axi",
+            "bd_wrapper",
             "arith",
             "all",
         ],
@@ -694,6 +725,16 @@ def main() -> None:
             "tb_cnn_axi_ctrl",
             AXI_CTRL_SOURCES["tb_cnn_axi_ctrl"],
             timing=True,
+        )
+
+    if args.only in ("all", "bd_wrapper"):
+        verilate_and_run(
+            "tb_cnn_bd_wrapper_elab",
+            BD_WRAPPER_SOURCES["tb_cnn_bd_wrapper_elab"],
+        )
+        verilate_and_run(
+            "tb_cnn_bd_wrapper_compare",
+            BD_WRAPPER_SOURCES["tb_cnn_bd_wrapper_compare"],
         )
 
     if args.only == "all" and not args.skip_pytest:

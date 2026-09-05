@@ -43,10 +43,19 @@ Do not maintain a second manually edited RTL copy inside a Vivado project folder
 cnn_accelerator_synth_wrapper
 ```
 
+For **IP Integrator / Block Design Module Reference**, use instead:
+
+```text
+cnn_accelerator_bd_wrapper
+```
+
+See `docs/cnn_bd_wrapper.md` (string parameters on the synth wrapper make it
+“incompatible” with Add Module when hide-incompatible is enabled).
+
 This is a **tiny pinout wrapper** around the verified
 `cnn_accelerator_shared_compute_top`. The full top exposes hundreds of
 TB/debug ports and cannot place on xc7z010 (~230 user IOs). The wrapper
-keeps `clk/rst/start/busy/done/predicted_class/maximum_logit` only.
+keeps control/status/result pins (and optional input-load ports).
 
 Architecture underneath (verified in RTL sim):
 
